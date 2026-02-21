@@ -1,4 +1,5 @@
 import { IconButton } from "../buttons/IconButton";
+import { DropdownItem } from "../dropdowns/DropdownItem";
 
 export default function MobileView() {
     return (
