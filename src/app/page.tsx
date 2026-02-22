@@ -8,9 +8,11 @@ export default async function Home() {
 
   const isMobile = /mobile|android|iphone|ipad|ipod/i.test(userAgent || '');
 
-  if (isMobile) {
-    return <MobileView />; 
-  }
+  // if (isMobile) {
+  //   return <MobileView />; 
+  // }
 
-  return <DesktopView />;
+  // return <DesktopView />;
+
+  return <MobileView />;
 }
