@@ -8,10 +8,9 @@ export default async function Home() {
 
   const isMobile = /mobile|android|iphone|ipad|ipod/i.test(userAgent || '');
 
-  // 3. เลือกหยิบ "แปลนบ้าน" ให้ตรงกับอุปกรณ์
   if (isMobile) {
-    return <MobileView />; // ส่งหน้าตาของมือถือไปให้
+    return <MobileView />; 
   }
 
-  return <DesktopView />; // ส่งหน้าตาของคอมพิวเตอร์ไปให้
+  return <DesktopView />;
 }
