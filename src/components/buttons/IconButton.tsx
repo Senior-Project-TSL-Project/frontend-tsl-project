@@ -10,7 +10,7 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
      */
     icon: string;
     pattern?: "primary" | "brand-primary" | "brand-inverted";
-    size?: 20 | 40;
+    size?: 16 | 20 | 24 | 40;
     state?: "default" | "hovered" | "pressed" | "focused" | "disabled";
 }
 
@@ -69,7 +69,9 @@ export function IconButton({
     
     // Size styles using CSS variables from design tokens
     const sizeStyles = {
+        16: "p-[var(--icon-button-shared-spacing-size-16-p)] w-[calc(16px+var(--icon-button-shared-spacing-size-16-p)*2)] h-[calc(16px+var(--icon-button-shared-spacing-size-16-p)*2)]",
         20: "p-[var(--icon-button-shared-spacing-size-20-p)] w-[calc(20px+var(--icon-button-shared-spacing-size-20-p)*2)] h-[calc(20px+var(--icon-button-shared-spacing-size-20-p)*2)]",
+        24: "p-[var(--icon-button-shared-spacing-size-24-p)] w-[calc(24px+var(--icon-button-shared-spacing-size-24-p)*2)] h-[calc(24px+var(--icon-button-shared-spacing-size-24-p)*2)]",
         40: "p-[var(--icon-button-shared-spacing-size-40-p)] w-[calc(40px+var(--icon-button-shared-spacing-size-40-p)*2)] h-[calc(40px+var(--icon-button-shared-spacing-size-40-p)*2)]"
     };
     

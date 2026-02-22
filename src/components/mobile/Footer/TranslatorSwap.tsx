@@ -2,33 +2,51 @@
 
 import { IconButton } from "@/components/buttons/IconButton";
 import { DropdownInput } from "@/components/dropdowns/DropdownInput";
-import { useState } from "react";
+import { useTranslateStore } from "@/stores/useTranslateStore";
+import { useEffect, useState } from "react";
 
 export function TranslatorSwap() {
-    const [selectedLanguageLeft, setSelectedLanguageLeft] = useState<string | null>(null);
-    const [selectedLanguageRight, setSelectedLanguageRight] = useState<string | null>(null);
-
-    const languageLeftOptions = [
+    const [selectedLanguageSource, setSelectedLanguageSource] = useState<string | null>(null);
+    const [selectedLanguageTarget, setSelectedLanguageTarget] = useState<string | null>(null);
+    const { setSourceLang, setTargetLang } = useTranslateStore();
+    const languageSourceOptions = [
         {
             id: "th",
             text: "Thai",
         },
     ]
 
-    const languageRightOptions = [
+    const languageTargetOptions = [
         {
             id: "tsl",
             text: "TSL (Thai)",
         },
     ]
+
+    useEffect(() => {
+        if (selectedLanguageSource) {
+            setSourceLang({
+                id: selectedLanguageSource,
+                text: languageSourceOptions.find(option => option.id === selectedLanguageSource)?.text || "",
+            });
+        }
+        if (selectedLanguageTarget) {
+            setTargetLang({
+                id: selectedLanguageTarget,
+                text: languageTargetOptions.find(option => option.id === selectedLanguageTarget)?.text || "",
+            });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedLanguageSource, selectedLanguageTarget, setSourceLang, setTargetLang]);
+
     return (
         <div className="flex flex-row px-3 w-full">
             <DropdownInput
                 pattern="secondary"
                 size={48}
-                selectedId={selectedLanguageLeft}
-                onSelectionChange={setSelectedLanguageLeft}
-                items={languageLeftOptions}
+                selectedId={selectedLanguageSource}
+                onSelectionChange={setSelectedLanguageSource}
+                items={languageSourceOptions}
                 groupLabel="All Languages"
                 useMobileMode
                 searchable
@@ -42,9 +60,9 @@ export function TranslatorSwap() {
             <DropdownInput
                 pattern="secondary"
                 size={48}
-                selectedId={selectedLanguageRight}
-                onSelectionChange={setSelectedLanguageRight}
-                items={languageRightOptions}
+                selectedId={selectedLanguageTarget}
+                onSelectionChange={setSelectedLanguageTarget}
+                items={languageTargetOptions}
                 groupLabel="All Languages"
                 useMobileMode
                 searchable
