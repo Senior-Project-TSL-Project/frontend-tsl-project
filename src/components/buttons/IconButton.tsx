@@ -2,6 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { useInteractionState } from "@/hooks/useInteractionState";
+import { useMergedHandlers } from "@/hooks/useMergedHandlers";
 
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     /**
@@ -26,18 +27,26 @@ export function IconButton({
     onFocus,
     onBlur,
     className = "",
-    ...rest 
+    ...props 
 }: IconButtonProps) {
     const { currentState, handlers } = useInteractionState({ 
         disabled, 
         externalState 
     });
-    
+    const mergedHandlers = useMergedHandlers<HTMLButtonElement>(handlers, {
+        onMouseEnter,
+        onMouseLeave,
+        onMouseDown,
+        onMouseUp,
+        onFocus,
+        onBlur
+    });
+
     // Pattern styles using CSS variables from design tokens
     const patternStyles = {
         "primary": {
             default: "bg-transparent text-[var(--icon-button-primary-content)]",
-            hovered: "bg-[var(--icon-button-primary-bg-state-hovered)] text-[var(--icon-button-primary-content)]",
+            hovered: "bg-[var(--icon-button-primary-bg-state-hovered)] text-[var(--icon-button-primary-content)] ",
             pressed: "bg-[var(--icon-button-primary-bg-state-pressed)] text-[var(--icon-button-primary-content)]",
             focused: "bg-[var(--icon-button-primary-bg-state-focused)] text-[var(--icon-button-primary-content)]",
             disabled: "bg-transparent text-[var(--icon-button-primary-content)] opacity-40 cursor-not-allowed"
@@ -64,38 +73,11 @@ export function IconButton({
         40: "p-[var(--icon-button-shared-spacing-size-40-p)] w-[calc(40px+var(--icon-button-shared-spacing-size-40-p)*2)] h-[calc(40px+var(--icon-button-shared-spacing-size-40-p)*2)]"
     };
     
-    // Merge handlers from hook with user-provided handlers
-    const mergeHandlers = {
-        onMouseEnter: (e: React.MouseEvent<HTMLButtonElement>) => {
-            handlers.onMouseEnter();
-            onMouseEnter?.(e);
-        },
-        onMouseLeave: (e: React.MouseEvent<HTMLButtonElement>) => {
-            handlers.onMouseLeave();
-            onMouseLeave?.(e);
-        },
-        onMouseDown: (e: React.MouseEvent<HTMLButtonElement>) => {
-            handlers.onMouseDown();
-            onMouseDown?.(e);
-        },
-        onMouseUp: (e: React.MouseEvent<HTMLButtonElement>) => {
-            handlers.onMouseUp();
-            onMouseUp?.(e);
-        },
-        onFocus: (e: React.FocusEvent<HTMLButtonElement>) => {
-            handlers.onFocus();
-            onFocus?.(e);
-        },
-        onBlur: (e: React.FocusEvent<HTMLButtonElement>) => {
-            handlers.onBlur();
-            onBlur?.(e);
-        }
-    };
-    
     const buttonClasses = `
         ${sizeStyles[size]}
         ${patternStyles[pattern][currentState]}
         ${className}
+        ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
         rounded-[var(--icon-button-shared-border-radius)]
         inline-flex
         items-center
@@ -107,15 +89,10 @@ export function IconButton({
     
     return (
         <button 
-            {...rest}
+            {...props}
             disabled={disabled}
             className={buttonClasses}
-            onMouseEnter={mergeHandlers.onMouseEnter}
-            onMouseLeave={mergeHandlers.onMouseLeave}
-            onMouseDown={mergeHandlers.onMouseDown}
-            onMouseUp={mergeHandlers.onMouseUp}
-            onFocus={mergeHandlers.onFocus}
-            onBlur={mergeHandlers.onBlur}
+            {...mergedHandlers}
         >
             <Icon icon={icon} width={size} height={size} />
         </button>
