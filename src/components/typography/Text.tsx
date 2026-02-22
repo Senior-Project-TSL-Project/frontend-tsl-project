@@ -18,7 +18,7 @@ export function Text({ children, size = "medium", weight = "normal", className =
     };
 
     return (
-        <span className={`${sizeClasses[size]} ${weightClasses[weight]} ${className}`}>
+        <span className={`${sizeClasses[size]} ${weightClasses[weight]} ${className} flex-1 block`}>
             {children}
         </span>
     );
