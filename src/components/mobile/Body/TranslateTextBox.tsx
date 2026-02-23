@@ -5,20 +5,33 @@ import { MobileTranslatorDivider } from "@/components/dividers/MobileTranslatorD
 import { TextArea } from "@/components/inputs/TextArea";
 import { useTranslateStore } from "@/stores/useTranslateStore";
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
+interface ExtendedWindow extends Window {
+    SpeechRecognition?: any;
+    webkitSpeechRecognition?: any;
+}
+
 export function TranslateTextBox() {
-    const [textInput, setTextInput] = useState("");
+    const [interimText, setInterimText] = useState('');
+    const [fullText, setFullText] = useState('');
     const {
         sourceLang,
         targetLang,
         model,
+        textInput,
+        setTextInput,
         translationResult,
         isLoading,
         setTranslationResult,
-        setIsLoading
+        setIsLoading,
+        isMic,
+        setIsMic
     } = useTranslateStore();
+
+    const recognitionRef = useRef<any>(null);
+    const fullTextRef = useRef('');
 
     // API call with debounce
     useEffect(() => {
@@ -66,6 +79,82 @@ export function TranslateTextBox() {
         }
     };
 
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // ดึง window มาใส่ตัวแปรที่เราระบุกฎไว้แล้ว
+            const win = window as unknown as ExtendedWindow;
+            const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
+
+            if (!SpeechRecognition) {
+                // TODO: Add notification for unsupported browser.
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = 'th-TH';
+            recognition.interimResults = true;
+            recognition.continuous = false;
+
+            recognition.onstart = () => {
+                setIsMic(true);
+            };
+
+            recognition.onend = () => {
+                setIsMic(false);
+                setTextInput(fullTextRef.current);
+            };
+
+            recognition.onerror = (event: any) => {
+                console.error("Speech recognition error", event.error);
+                setIsMic(false);
+                if (event.error === 'not-allowed') {
+                    // TODO: แจ้งเตือนให้ผู้ใช้อนุญาตไมโครโฟน
+                } else {
+                    // TODO: แจ้งเตือนเกิดข้อผิดพลาดในการรับเสียง
+                }
+            };
+
+            recognition.onresult = (event: any) => {
+                let currentInterim = "";
+                let currentFinal = "";
+
+                // วนลูปอ่านผลลัพธ์ที่ล่ามจดมาได้
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        currentFinal += transcript + " ";
+                    } else {
+                        currentInterim += transcript;
+                    }
+                }
+
+                setFullText((prevText) => {
+                    const newFullText = prevText + currentFinal;
+                    fullTextRef.current = newFullText;
+                    return newFullText;
+                });
+                setInterimText(currentInterim);
+            };
+
+            recognitionRef.current = recognition;
+        }
+    }, []);
+
+    useEffect(() => {
+        if (recognitionRef.current) {
+            if (isMic) {
+                recognitionRef.current.start();
+                setInterimText('');
+                setFullText('');
+                fullTextRef.current = '';
+                setTextInput('');
+            } else {
+                recognitionRef.current.stop();
+            }
+        }
+    }, [isMic]);
+
     return (
         <>
             <div className="min-h-35 py-2 gap-4">
@@ -80,6 +169,8 @@ export function TranslateTextBox() {
                         <TextArea
                             value={textInput}
                             onChange={setTextInput}
+                            placeholder={isMic ? fullText + interimText || "Listening..." : "Enter text to translate"}
+                            disabled={isMic}
                         />
                     </div>
                     <div className="flex flex-row mt-6"></div>
@@ -101,6 +192,7 @@ export function TranslateTextBox() {
                                 value={translationResult}
                                 onChange={() => { }}
                                 isLoading={isLoading}
+                                placeholder=""
                                 disabled
                             />
                         </div>

@@ -96,7 +96,7 @@ export function IconButton({
             className={buttonClasses}
             {...mergedHandlers}
         >
-            <Icon icon={icon} width={size} height={size} />
+            <Icon icon={icon} width={size} height={size} className="pointer-events-none" />
         </button>
     );
 }
