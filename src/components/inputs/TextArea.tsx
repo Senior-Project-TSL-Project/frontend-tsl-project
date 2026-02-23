@@ -39,7 +39,7 @@ export function TextArea({
                 className={`w-full h-6.75 resize-none overflow-hidden focus:outline-none text-[18px] placeholder:text(--text-box-content-body-state-empty) ${className}`}
                 onInput={(e) => auto_grow(e.target as HTMLTextAreaElement)}
                 onKeyDown={handleKeyDown}
-                placeholder={disabled ? "" : placeholder}
+                placeholder={placeholder}
                 value={value}
                 onChange={(e) => onChange?.(e.target.value)}
                 disabled={disabled}>

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 export function TranslatorSwap() {
     const [selectedLanguageSource, setSelectedLanguageSource] = useState<string | null>(null);
     const [selectedLanguageTarget, setSelectedLanguageTarget] = useState<string | null>(null);
-    const { setSourceLang, setTargetLang } = useTranslateStore();
+    const { setSourceLang, setTargetLang, isMic } = useTranslateStore();
     const languageSourceOptions = [
         {
             id: "th",
@@ -50,6 +50,7 @@ export function TranslatorSwap() {
                 groupLabel="All Languages"
                 useMobileMode
                 searchable
+                disabled={isMic}
             />
             <IconButton
                 icon="material-symbols:swap-horiz-rounded"
@@ -66,6 +67,7 @@ export function TranslatorSwap() {
                 groupLabel="All Languages"
                 useMobileMode
                 searchable
+                disabled={isMic}
             />
         </div>
     );
