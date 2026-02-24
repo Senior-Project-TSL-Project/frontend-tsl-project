@@ -15,12 +15,12 @@ export function TranslateTextBox() {
         targetLang,
         model,
         textInput,
-        setTextInput,
         translationResult,
         isLoading,
+        isMic,
+        setTextInput,
         setTranslationResult,
         setIsLoading,
-        isMic,
         setIsMic
     } = useTranslateStore();
 
@@ -28,6 +28,7 @@ export function TranslateTextBox() {
         isListening,
         interimText,
         finalText,
+        isSupported,
         start: startSpeechRecognition,
         stop: stopSpeechRecognition
     } = useSpeechRecognition({
@@ -36,11 +37,8 @@ export function TranslateTextBox() {
         interimResults: true,
         onEnd: (text) => {
             setTextInput(text);
-            // setIsMic(false);
         },
         onError: (error) => {
-            console.error("Speech recognition error:", error);
-            // setIsMic(false);
             // TODO: Add toast notification
         }
     });
@@ -54,7 +52,13 @@ export function TranslateTextBox() {
     useEffect(() => {
         if (isMic && !isListening) {
             setTextInput('');
-            startSpeechRecognition();
+            if (!isSupported) {
+                alert("Speech recognition is not supported in this browser.");
+                setIsMic(false);
+                return;
+            } else {
+                startSpeechRecognition();
+            }
         } else if (!isMic && isListening) {
             stopSpeechRecognition();
         }
