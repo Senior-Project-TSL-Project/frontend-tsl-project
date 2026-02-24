@@ -8,7 +8,7 @@ export function TranslatorMic() {
             {/* Animated circles behind the button when mic is active */}
             {isMic && (
                 <>
-                    <div className="absolute w-16 h-16 bg-blue-400 border rounded-full opacity-75 animate-ping" />
+                    <div className="absolute w-16 h-16 bg-blue-400 rounded-full opacity-75 animate-ping" />
                 </>
             )}
             
