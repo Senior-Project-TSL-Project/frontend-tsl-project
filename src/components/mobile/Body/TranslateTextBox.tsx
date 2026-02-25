@@ -37,17 +37,27 @@ export function TranslateTextBox() {
         interimResults: true,
         onEnd: (text) => {
             setTextInput(text);
+            // Explicitly turn off mic when speech ends (Safari fix)
+            setIsMic(false);
             console.log("Final text:", text)
         },
         onError: (error) => {
+            // Explicitly turn off mic on error (Safari fix)
+            setIsMic(false);
             // TODO: Add toast notification
         }
     });
 
     // Sync isListening with isMic
     useEffect(() => {
-        setIsMic(isListening);
-    }, [isListening, setIsMic]);
+        if (!isListening && isMic) {
+            // If speech recognition stopped but isMic is still true, force sync
+            setIsMic(false);
+        } else if (isListening && !isMic) {
+            // If speech recognition is active but isMic is false, sync
+            setIsMic(true);
+        }
+    }, [isListening, isMic, setIsMic]);
 
     // Control speech recognition based on isMic state
     useEffect(() => {

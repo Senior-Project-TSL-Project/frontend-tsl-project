@@ -99,6 +99,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
             };
 
             recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+                console.log("Speech recognition error:", event.error);
+                // Immediately set listening to false on error for Safari
                 setIsListening(false);
                 
                 if (event.error === 'not-allowed') {
