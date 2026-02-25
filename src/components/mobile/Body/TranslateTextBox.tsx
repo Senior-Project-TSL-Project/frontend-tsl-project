@@ -37,6 +37,7 @@ export function TranslateTextBox() {
         interimResults: true,
         onEnd: (text) => {
             setTextInput(text);
+            console.log("Final text:", text)
         },
         onError: (error) => {
             // TODO: Add toast notification

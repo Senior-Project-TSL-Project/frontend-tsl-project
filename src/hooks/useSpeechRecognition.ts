@@ -91,7 +91,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
             recognition.onend = () => {
                 console.log("Speech recognition ended");
                 setIsListening(false);
-                const text = finalTextRef.current.trim();
+                const text = finalTextRef.current.trim() || interimTextRef.current.trim();
                 // เรียกใช้งานผ่าน Ref แทน
                 if (onEndRef.current && text) {
                     onEndRef.current(text);
@@ -113,6 +113,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
                     const message = `เกิดข้อผิดพลาด: ${event.error}`;
                     if (onErrorRef.current) onErrorRef.current(message);
                 }
+
+                console.log(event)
             };
 
             recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -159,6 +161,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
                 setInterimText('');
                 setFinalText('');
                 finalTextRef.current = ''; 
+                interimTextRef.current = '';
                 
                 recognitionRef.current.start();
             } catch (error) {
