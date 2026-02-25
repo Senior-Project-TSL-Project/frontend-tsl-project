@@ -116,7 +116,7 @@ export function TranslateTextBox() {
                 {/* Source */}
                 <div className="flex flex-col px-3 min-h-35">
                     {textInput && <div className="flex flex-row">
-                        <span className="text-sm">{sourceLang.text}</span>
+                        <span className="">{sourceLang.text}</span>
                         {/* TODO: Add chip here */}
                         <span className="ml-auto text-sm font-medium text-(--chip-brand-content-label) px-2 py-1" onClick={() => setTextInput("")}>clear</span>
                     </div>}

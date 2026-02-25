@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface SpeechRecognitionEvent extends Event {
     results: SpeechRecognitionResultList;
@@ -46,10 +46,26 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
     const [isListening, setIsListening] = useState(false);
     const [interimText, setInterimText] = useState('');
     const [finalText, setFinalText] = useState('');
-    const [isSupported, setIsSupported] = useState(true);
+    const [isSupported] = useState(() => {
+    if (typeof window !== 'undefined') {
+        const win = window as unknown as ExtendedWindow;
+        const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
+        return !!SpeechRecognition; 
+    }
+    return false;
+});
 
     const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
     const finalTextRef = useRef('');
+    const interimTextRef = useRef('');
+
+    const onEndRef = useRef(onEnd);
+    const onErrorRef = useRef(onError);
+
+    useEffect(() => {
+        onEndRef.current = onEnd;
+        onErrorRef.current = onError;
+    }, [onEnd, onError]);
 
     // Initialize speech recognition
     useEffect(() => {
@@ -58,7 +74,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
             const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
 
             if (!SpeechRecognition) {
-                setIsSupported(false);
                 return;
             }
 
@@ -70,29 +85,33 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
 
             recognition.onstart = () => {
                 console.log("Speech recognition started");
+                setIsListening(true); 
             };
 
             recognition.onend = () => {
                 console.log("Speech recognition ended");
-                const text = finalTextRef.current.trim();
-                if (onEnd && text) {
-                    onEnd(text);
-                }
                 setIsListening(false);
+                const text = finalTextRef.current.trim();
+                // เรียกใช้งานผ่าน Ref แทน
+                if (onEndRef.current && text) {
+                    onEndRef.current(text);
+                }
             };
 
             recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-                console.error("Speech recognition error", event.error);
                 setIsListening(false);
                 
                 if (event.error === 'not-allowed') {
-                    if (onError) {
-                        onError('Microphone permission denied');
-                    }
-                } else if (event.error !== 'aborted') {
-                    if (onError) {
-                        onError(`Speech recognition error: ${event.error}`);
-                    }
+                    const message = 'ไม่ได้รับอนุญาตให้ใช้ไมโครโฟน กรุณาตั้งค่าในการตั้งค่าเบราว์เซอร์';
+                    if (onErrorRef.current) onErrorRef.current(message);
+                } else if (event.error === 'no-speech') {
+                    console.log('No speech detected');
+                } else if (event.error === 'aborted') {
+                    console.log('Speech recognition aborted');
+                } else {
+                    console.error('Speech recognition error:', event.error);
+                    const message = `เกิดข้อผิดพลาด: ${event.error}`;
+                    if (onErrorRef.current) onErrorRef.current(message);
                 }
             };
 
@@ -100,7 +119,6 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
                 let interim = "";
                 let final = "";
 
-                // รวม transcript ทั้งหมด
                 for (let i = 0; i < event.results.length; i++) {
                     const transcript = event.results[i][0].transcript;
                     if (event.results[i].isFinal) {
@@ -113,6 +131,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
                 finalTextRef.current = final;
                 setFinalText(final);
                 setInterimText(interim);
+                interimTextRef.current = interim;
             };
 
             recognitionRef.current = recognition;
@@ -127,9 +146,9 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
                 }
             }
         };
-    }, [lang, continuous, interimResults, onEnd, onError]);
+    }, [lang, continuous, interimResults]); 
 
-    const start = () => {
+    const start = useCallback(() => {
         if (!isSupported) {
             console.error("Speech recognition is not supported in this browser");
             return;
@@ -137,18 +156,18 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
 
         if (recognitionRef.current && !isListening) {
             try {
-                recognitionRef.current.start();
                 setInterimText('');
                 setFinalText('');
-                finalTextRef.current = '';
-                setIsListening(true);
+                finalTextRef.current = ''; 
+                
+                recognitionRef.current.start();
             } catch (error) {
                 console.error("Error starting recognition:", error);
             }
         }
-    };
+    }, [isSupported, isListening]);
 
-    const stop = () => {
+    const stop = useCallback(() => {
         if (recognitionRef.current && isListening) {
             try {
                 recognitionRef.current.stop();
@@ -156,15 +175,15 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
                 console.error("Error stopping recognition:", error);
             }
         }
-    };
+    }, [isListening]);
 
-    const toggle = () => {
+    const toggle = useCallback(() => {
         if (isListening) {
             stop();
         } else {
             start();
         }
-    };
+    }, [isListening, start, stop]);
 
     return {
         isListening,
