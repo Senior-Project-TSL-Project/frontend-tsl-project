@@ -16,8 +16,9 @@ export interface DropdownItemProps extends React.ButtonHTMLAttributes<HTMLButton
     icon?: string;
     pattern?: "primary";
     state?: "default" | "hovered" | "pressed" | "focused" | "disabled";
-    text: string;
+    label: string;
     isSelected?: boolean;
+    disabled?: boolean;
 }
 
 export function DropdownItem({
@@ -32,7 +33,7 @@ export function DropdownItem({
     onFocus,
     onBlur,
     className = "",
-    text,
+    label,
     isSelected = false,
     ...props
 }: DropdownItemProps) {
@@ -84,7 +85,7 @@ export function DropdownItem({
             {...props}
         >
             {icon && <Icon icon={icon} width={20} height={20} />}
-            <Text size="small" weight="medium" className="flex-1 px-1">{text}</Text>
+            <Text size="small" weight="medium" className="flex-1 px-1">{label}</Text>
             {isSelected && <Icon icon="material-symbols:check-small-rounded" width={20} height={20} />}
         </button>
     )

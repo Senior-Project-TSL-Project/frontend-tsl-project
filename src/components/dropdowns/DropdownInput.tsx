@@ -76,7 +76,7 @@ export function DropdownInput({
 
     useEffect(() => {
         if (!hasSetDefaultRef.current && selectedId === null && !canClearSelected && onSelectionChange) {
-            const defaultId = defaultSelectedId || items.find(item => item.id)?.id || null;
+            const defaultId = defaultSelectedId || items.find(item => item.id && !item.disabled)?.id || null;
             if (defaultId) {
                 hasSetDefaultRef.current = true;
                 onSelectionChange(defaultId);
@@ -84,7 +84,7 @@ export function DropdownInput({
         }
     }, [selectedId, canClearSelected, onSelectionChange, defaultSelectedId, items]);
 
-    const selectedItem = items.find(item => item.id === selectedId);
+    const selectedItem = items.find(item => item.id === selectedId && !item.disabled) || null;
 
     // Toggle dropdown or bottom sheet
     const handleToggle = () => {
@@ -233,7 +233,7 @@ export function DropdownInput({
                         />
                     )}
                     <Text size="small" weight="medium" className="text-center">
-                        {selectedItem?.text || placeholder}
+                        {selectedItem?.label || placeholder}
                     </Text>
                 </div>
                 <Icon

@@ -3,41 +3,31 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { DropdownInput } from "@/components/dropdowns/DropdownInput";
 import { useTranslateStore } from "@/stores/useTranslateStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function TranslatorSwap() {
     const [selectedLanguageSource, setSelectedLanguageSource] = useState<string | null>(null);
     const [selectedLanguageTarget, setSelectedLanguageTarget] = useState<string | null>(null);
-    const { setSourceLang, setTargetLang, isMic } = useTranslateStore();
+    const { isMic } = useTranslateStore();
     const languageSourceOptions = [
         {
             id: "th",
-            text: "Thai",
+            label: "Thai",
         },
     ]
 
     const languageTargetOptions = [
         {
             id: "tsl",
-            text: "TSL (Thai)",
+            label: "TSL (mT5)",
+            disabled: true,
+        },
+        {
+            id: "llm",
+            label: "TSL (LLM)",
+            disabled: true,
         },
     ]
-
-    useEffect(() => {
-        if (selectedLanguageSource) {
-            setSourceLang({
-                id: selectedLanguageSource,
-                text: languageSourceOptions.find(option => option.id === selectedLanguageSource)?.text || "",
-            });
-        }
-        if (selectedLanguageTarget) {
-            setTargetLang({
-                id: selectedLanguageTarget,
-                text: languageTargetOptions.find(option => option.id === selectedLanguageTarget)?.text || "",
-            });
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedLanguageSource, selectedLanguageTarget, setSourceLang, setTargetLang]);
 
     return (
         <div className="flex flex-row px-3 w-full">
@@ -68,6 +58,7 @@ export function TranslatorSwap() {
                 useMobileMode
                 searchable
                 disabled={isMic}
+                // getApi="/models-dropdown"
             />
         </div>
     );
