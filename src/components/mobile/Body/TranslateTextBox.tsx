@@ -13,7 +13,6 @@ export function TranslateTextBox() {
     const {
         sourceLang,
         targetLang,
-        model,
         textInput,
         translationResult,
         isLoading,
@@ -79,7 +78,7 @@ export function TranslateTextBox() {
             try {
                 const response = await axios.post('/api/predict', {
                     text: textInput,
-                    model: model
+                    model: targetLang.id
                 });
 
                 if (response.data.gloss) {
@@ -97,7 +96,7 @@ export function TranslateTextBox() {
         }, 800);
 
         return () => clearTimeout(timer);
-    }, [textInput, model, setTranslationResult, setIsLoading]);
+    }, [textInput, targetLang.id, setTranslationResult, setIsLoading]);
 
     const handleCopy = async () => {
         if (translationResult) {
@@ -116,7 +115,7 @@ export function TranslateTextBox() {
                 {/* Source */}
                 <div className="flex flex-col px-3 min-h-35">
                     {textInput && <div className="flex flex-row">
-                        <span className="">{sourceLang.text}</span>
+                        <span className="">{sourceLang.label}</span>
                         {/* TODO: Add chip here */}
                         <span className="ml-auto text-sm font-medium text-(--chip-brand-content-label) px-2 py-1" onClick={() => setTextInput("")}>clear</span>
                     </div>}
@@ -124,8 +123,8 @@ export function TranslateTextBox() {
                         <TextArea
                             value={textInput}
                             onChange={setTextInput}
-                            placeholder={isMic ? finalText + interimText || "Listening..." : "Enter text to translate"}
-                            disabled={isMic}
+                            placeholder={isMic ? finalText + interimText || "Listening..." : targetLang.id ? "Enter text to translate" : "Please select a target language"}
+                            disabled={isMic || !targetLang.id}
                         />
                     </div>
                     <div className="flex flex-row mt-6"></div>
@@ -139,7 +138,7 @@ export function TranslateTextBox() {
                         <div className="flex flex-row gap-1 text-(--text-box-content-title-selected)">
                             <Icon icon="material-symbols:sign-language" className="text-[16px]" />
                             <span className="text-sm">
-                                {targetLang.text}
+                                {targetLang.label}
                             </span>
                         </div>
                         <div className="flex flex-row text-(--text-box-content-body-state-selected)">
