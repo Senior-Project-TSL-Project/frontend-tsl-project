@@ -84,12 +84,10 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
             recognition.continuous = continuous;
 
             recognition.onstart = () => {
-                console.log("Speech recognition started");
                 setIsListening(true); 
             };
 
             recognition.onend = () => {
-                console.log("Speech recognition ended");
                 setIsListening(false);
                 const text = finalTextRef.current.trim() || interimTextRef.current.trim();
                 // เรียกใช้งานผ่าน Ref แทน
@@ -105,16 +103,13 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
                     const message = 'ไม่ได้รับอนุญาตให้ใช้ไมโครโฟน กรุณาตั้งค่าในการตั้งค่าเบราว์เซอร์';
                     if (onErrorRef.current) onErrorRef.current(message);
                 } else if (event.error === 'no-speech') {
-                    console.log('No speech detected');
+                    // TODO : Add toast notification for no speech detected
                 } else if (event.error === 'aborted') {
-                    console.log('Speech recognition aborted');
+                    // TODO : Add toast notification for speech recognition aborted
                 } else {
-                    console.error('Speech recognition error:', event.error);
                     const message = `เกิดข้อผิดพลาด: ${event.error}`;
                     if (onErrorRef.current) onErrorRef.current(message);
                 }
-
-                console.log(event)
             };
 
             recognition.onresult = (event: SpeechRecognitionEvent) => {

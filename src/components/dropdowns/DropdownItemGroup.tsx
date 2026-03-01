@@ -33,7 +33,7 @@ export function DropdownItemGroup({
     const [internalSelectedId, setInternalSelectedId] = useState<string | null>(() => {
         if (defaultSelectedId) return defaultSelectedId;
         if (!canClearSelected) {
-            const firstItemWithId = items.find(item => item.id);
+            const firstItemWithId = items.find(item => item.id && !item.disabled);
             return firstItemWithId?.id || null;
         }
         return null;
@@ -47,7 +47,7 @@ export function DropdownItemGroup({
         if (defaultSelectedId) {
             selectedId = defaultSelectedId;
         } else {
-            const firstItemWithId = items.find(item => item.id);
+            const firstItemWithId = items.find(item => item.id && !item.disabled);
             selectedId = firstItemWithId?.id || null;
         }
     }
@@ -79,10 +79,10 @@ export function DropdownItemGroup({
     // Filter items based on search query
     const filteredItems = searchable && searchQuery
         ? items.filter(item => 
-            item.text.toLowerCase().includes(searchQuery.toLowerCase())
+            item.label.toLowerCase().includes(searchQuery.toLowerCase())
         )
         : items;
-
+    
     return (
         <div className={`${className}`}>
             {/* Search Input */}

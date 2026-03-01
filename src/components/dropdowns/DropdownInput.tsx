@@ -8,9 +8,10 @@ import { useInteractionState } from "@/hooks/useInteractionState";
 import { useMergedHandlers } from "@/hooks/useMergedHandlers";
 import { Text } from "@/components/typography/Text";
 import { BottomSheet } from "@/components/mobile/BottomSheet/BottomSheet";
+import axios from "axios";
 
 interface DropdownInputProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onSelect'> {
-    items: DropdownItemProps[];
+    items?: DropdownItemProps[];
     pattern?: "primary" | "secondary" | "tertiary";
     size?: 36 | 48;
     placeholder?: string;
@@ -25,6 +26,11 @@ interface DropdownInputProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
     searchPlaceholder?: string;
     bottomSheetTitle?: string;
     groupLabel?: string;
+    endpoint?: string;
+    onLoading?: (isLoading: boolean) => void;
+    onLoadComplete?: (data: any[]) => void;
+    valueKey?: string;
+    labelKey?: string;
 }
 
 export function DropdownInput({
@@ -50,6 +56,11 @@ export function DropdownInput({
     onFocus,
     onBlur,
     groupLabel,
+    endpoint,
+    onLoading,
+    onLoadComplete,
+    valueKey,
+    labelKey,
     ...props
 }: DropdownInputProps) {
     const [isOpen, setIsOpen] = useState(false);
@@ -59,11 +70,43 @@ export function DropdownInput({
     const dropdownRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const hasSetDefaultRef = useRef(false);
+    const [itemOptions, setItemOptions] = useState<DropdownItemProps[] | null>(items || null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const { currentState, handlers } = useInteractionState({
         disabled,
         externalState
     });
+
+    const transformedItems = (item: any): DropdownItemProps => {
+        return {
+            id: valueKey ? item[valueKey] : item.id,
+            label: labelKey ? item[labelKey] : item.label,
+            icon: item.icon,
+            disabled: item.disabled
+        }
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (endpoint) {
+                try {
+                    onLoading?.(true);
+                    setIsLoading(true);
+                    const temp = await axios.get('/api' + endpoint);
+                    const response = temp.data.map(transformedItems);
+                    setItemOptions(response);
+                    onLoadComplete?.(response);
+                } catch (error) {
+                } finally {
+                    onLoading?.(false);
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        fetchData();
+    }, [endpoint]);
 
     const mergedHandlers = useMergedHandlers<HTMLButtonElement>(handlers, {
         onMouseEnter,
@@ -76,15 +119,15 @@ export function DropdownInput({
 
     useEffect(() => {
         if (!hasSetDefaultRef.current && selectedId === null && !canClearSelected && onSelectionChange) {
-            const defaultId = defaultSelectedId || items.find(item => item.id)?.id || null;
+            const defaultId = defaultSelectedId || itemOptions?.find(item => item.id && !item.disabled)?.id || null;
             if (defaultId) {
                 hasSetDefaultRef.current = true;
                 onSelectionChange(defaultId);
             }
         }
-    }, [selectedId, canClearSelected, onSelectionChange, defaultSelectedId, items]);
+    }, [selectedId, canClearSelected, onSelectionChange, defaultSelectedId, itemOptions]);
 
-    const selectedItem = items.find(item => item.id === selectedId);
+    const selectedItem = itemOptions?.find(item => item.id === selectedId && !item.disabled) || null;
 
     // Toggle dropdown or bottom sheet
     const handleToggle = () => {
@@ -233,7 +276,7 @@ export function DropdownInput({
                         />
                     )}
                     <Text size="small" weight="medium" className="text-center">
-                        {selectedItem?.text || placeholder}
+                        {isLoading ? "Loading..." : selectedItem?.label || placeholder}
                     </Text>
                 </div>
                 <Icon
@@ -253,7 +296,7 @@ export function DropdownInput({
                     title={bottomSheetTitle}
                 >
                     <DropdownItemGroup
-                        items={items}
+                        items={itemOptions || []}
                         selectedId={selectedId}
                         onSelectionChange={handleSelectionChange}
                         canClearSelected={canClearSelected}
@@ -281,7 +324,7 @@ export function DropdownInput({
                         }}
                     >
                         <DropdownItemGroup
-                            items={items}
+                            items={itemOptions || []}
                             selectedId={selectedId}
                             onSelectionChange={handleSelectionChange}
                             canClearSelected={canClearSelected}

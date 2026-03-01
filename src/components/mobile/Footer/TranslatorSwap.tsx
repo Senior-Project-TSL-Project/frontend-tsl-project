@@ -8,41 +8,40 @@ import { useEffect, useState } from "react";
 export function TranslatorSwap() {
     const [selectedLanguageSource, setSelectedLanguageSource] = useState<string | null>(null);
     const [selectedLanguageTarget, setSelectedLanguageTarget] = useState<string | null>(null);
+    const [isTargetLoading, setIsTargetLoading] = useState(false);
     const { setSourceLang, setTargetLang, isMic } = useTranslateStore();
     const languageSourceOptions = [
         {
             id: "th",
-            text: "Thai",
+            label: "Thai",
         },
     ]
 
-    const languageTargetOptions = [
-        {
-            id: "tsl",
-            text: "TSL (Thai)",
-        },
-    ]
+    const [languageTargetOptions, setLanguageTargetOptions] = useState<{ id: string; label: string; disabled: boolean }[]>([]);
 
     useEffect(() => {
         if (selectedLanguageSource) {
             setSourceLang({
                 id: selectedLanguageSource,
-                text: languageSourceOptions.find(option => option.id === selectedLanguageSource)?.text || "",
+                label: languageSourceOptions.find(option => option.id === selectedLanguageSource)?.label || "",
             });
         }
         if (selectedLanguageTarget) {
             setTargetLang({
                 id: selectedLanguageTarget,
-                text: languageTargetOptions.find(option => option.id === selectedLanguageTarget)?.text || "",
+                label: languageTargetOptions.find(option => option.id === selectedLanguageTarget)?.label || "",
             });
         }
+        console.log("Selected Source Language:", selectedLanguageSource);
+        console.log("Selected Target Language:", selectedLanguageTarget);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedLanguageSource, selectedLanguageTarget, setSourceLang, setTargetLang]);
+    }, [selectedLanguageSource, selectedLanguageTarget, languageTargetOptions, setSourceLang, setTargetLang]);
 
     return (
         <div className="flex flex-row px-3 w-full">
             <DropdownInput
                 pattern="secondary"
+                bottomSheetTitle="Translate from"
                 size={48}
                 selectedId={selectedLanguageSource}
                 onSelectionChange={setSelectedLanguageSource}
@@ -60,14 +59,22 @@ export function TranslatorSwap() {
             />
             <DropdownInput
                 pattern="secondary"
+                bottomSheetTitle="Translate to"
                 size={48}
                 selectedId={selectedLanguageTarget}
                 onSelectionChange={setSelectedLanguageTarget}
-                items={languageTargetOptions}
                 groupLabel="All Languages"
                 useMobileMode
                 searchable
-                disabled={isMic}
+                disabled={isMic || isTargetLoading}
+                endpoint="/models-dropdown"
+                onLoading={setIsTargetLoading}
+                onLoadComplete={(data: any[]) => {
+                    console.log(data)
+                    setLanguageTargetOptions(data)
+                }}
+                valueKey="id"
+                labelKey="model"
             />
         </div>
     );

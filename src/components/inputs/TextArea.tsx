@@ -1,3 +1,5 @@
+import { useRef, useEffect } from 'react';
+
 interface TextAreaProps {
     value: string;
     onChange?: (value: string) => void;
@@ -16,10 +18,18 @@ export function TextArea({
     className = "",
     isLoading = false
 }: TextAreaProps) {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
     const auto_grow = (element: HTMLTextAreaElement) => {
         element.style.height = "27px";
         element.style.height = (element.scrollHeight) + "px";
     }
+
+    useEffect(() => {
+        if (textareaRef.current) {
+            auto_grow(textareaRef.current);
+        }
+    }, [value]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -36,12 +46,14 @@ export function TextArea({
                 <div className={`w-full h-6.75 animate-pulse bg-(--loading-bg-first) ${className}`} />
              ) :
             <textarea
+                ref={textareaRef}
                 className={`w-full h-6.75 resize-none overflow-hidden focus:outline-none text-[18px] placeholder:text(--text-box-content-body-state-empty) ${className}`}
                 onInput={(e) => auto_grow(e.target as HTMLTextAreaElement)}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
                 value={value}
-                onChange={(e) => onChange?.(e.target.value)}
+                onChange={(e) => onChange?.(e.target.value)
+               }
                 disabled={disabled}>
             </textarea>}
         </>
