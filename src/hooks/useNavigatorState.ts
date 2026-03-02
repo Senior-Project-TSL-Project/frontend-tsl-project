@@ -3,10 +3,31 @@ import { useState, useEffect } from 'react';
 export function useNavigatorState() {
     const [isClipboardSupported, setIsClipboardSupported] = useState(false);
     const [clipboardText, setClipboardText] = useState<string | null>(null);
+    const [isShowPaste, setIsShowPaste] = useState<boolean | null>(null);
 
     useEffect(() => {
         setIsClipboardSupported(!!navigator.clipboard && !!navigator.clipboard.writeText);
+        updatePasteStatus();
+
+        const handleClipboardChange = () => {
+            updatePasteStatus();
+        };
+
+        window.addEventListener('focus', handleClipboardChange);
+
+        return () => {
+            window.removeEventListener('focus', handleClipboardChange);
+        }
     }, []);
+
+    const updatePasteStatus = async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            setIsShowPaste(text.length > 0);
+        } catch (err) {
+            setIsShowPaste(false); 
+        }
+    };
 
     const writeToClipboard = async (text: string) => {
         if (!isClipboardSupported) {
@@ -44,5 +65,5 @@ export function useNavigatorState() {
         }
     }
 
-    return { isClipboardSupported, clipboardText, writeToClipboard, readToClipboard };
+    return { isClipboardSupported, isShowPaste, clipboardText, writeToClipboard, readToClipboard };
 }

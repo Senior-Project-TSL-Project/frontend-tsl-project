@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="th">
       <body
-        className={`${googleSans.className} antialiased`}
+        className={`${googleSans.className} antialiased select-none`}
       >
         {children}
       </body>
