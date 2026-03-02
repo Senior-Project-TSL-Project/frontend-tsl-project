@@ -45,7 +45,7 @@ export function TranslateTextBox() {
         }
     });
 
-    const { writeToClipboard, readToClipboard, clipboardText } = useNavigatorState();
+    const { writeToClipboard, readToClipboard, isShowPaste } = useNavigatorState();
 
     // Sync isListening with isMic
     useEffect(() => {
@@ -148,7 +148,7 @@ export function TranslateTextBox() {
                     )}
                     {!textInput && (
                         <div className="flex flex-row mt-10 w-full justify-start">
-                            <Chip pattern="brand-secondary" size={36} icon="material-symbols:file-copy-rounded" label={"Paste"} onClick={handlePaste} />
+                            {isShowPaste && <Chip pattern="brand-secondary" size={36} icon="material-symbols:file-copy-rounded" label={"Paste"} onClick={handlePaste} />}
                         </div>
                     )}
                 </div>

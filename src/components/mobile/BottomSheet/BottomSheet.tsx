@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
+import { useClickOutside } from "@/components/dropdowns/hooks";
 
 interface BottomSheetProps {
     isOpen: boolean;
@@ -27,6 +28,8 @@ export function BottomSheet({
         }
     };
 
+    useClickOutside(sheetRef, onClose, isOpen);
+    
     // Prevent body scroll when open
     useEffect(() => {
         if (isOpen) {
