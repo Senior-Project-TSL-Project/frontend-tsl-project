@@ -10,21 +10,25 @@ export function useNavigatorState() {
 
     const writeToClipboard = async (text: string) => {
         if (!isClipboardSupported) {
+            alert("Clipboard API is not supported in this browser.");
             // TODO: Add "Clipboard API is not supported in this browser."
             return;
         }
 
         try {
             await navigator.clipboard.writeText(text).then(() => {
+                alert("Text copied to clipboard!");
                 // TODO: Add a toast notification here
             });
         } catch (error) {
+            alert("Failed to copy to clipboard.");
             // TODO: Add "Failed to copy to clipboard." toast notification here
         }
     } 
 
     const readToClipboard = async () => {
         if (!isClipboardSupported) {
+            alert("Clipboard API is not supported in this browser.");
             // TODO: Add "Clipboard API is not supported in this browser."
             return null;
         }
@@ -34,6 +38,7 @@ export function useNavigatorState() {
             setClipboardText(text);
             return text;
         } catch (error) {
+            alert("Failed to read from clipboard.");
             // TODO: Add "Failed to read from clipboard." toast notification here
             return null;
         }

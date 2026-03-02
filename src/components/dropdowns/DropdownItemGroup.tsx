@@ -2,8 +2,9 @@
 
 import { DropdownItem, DropdownItemProps } from "./DropdownItem";
 import { SearchInput } from "./SearchInput";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Text } from "../typography/Text";
+import { useSelectionState, useSearchFilter } from "./hooks";
 
 interface DropdownItemGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     items: DropdownItemProps[];
@@ -29,37 +30,19 @@ export function DropdownItemGroup({
     className = "",
     isMobile = false,
 }: DropdownItemGroupProps) {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [internalSelectedId, setInternalSelectedId] = useState<string | null>(() => {
-        if (defaultSelectedId) return defaultSelectedId;
-        if (!canClearSelected) {
-            const firstItemWithId = items.find(item => item.id && !item.disabled);
-            return firstItemWithId?.id || null;
-        }
-        return null;
+    // Custom hooks (Single Responsibility Principle)
+    const { searchQuery, setSearchQuery, filteredItems } = useSearchFilter(items, searchable);
+    
+    const { selectedId, handleSelect } = useSelectionState({
+        items,
+        selectedId: controlledSelectedId,
+        onSelectionChange,
+        canClearSelected,
+        defaultSelectedId
     });
 
-    const isControlled = controlledSelectedId !== undefined;
-    
-    let selectedId = isControlled ? controlledSelectedId : internalSelectedId;
-    
-    if (selectedId === null && !canClearSelected) {
-        if (defaultSelectedId) {
-            selectedId = defaultSelectedId;
-        } else {
-            const firstItemWithId = items.find(item => item.id && !item.disabled);
-            selectedId = firstItemWithId?.id || null;
-        }
-    }
-
-    const handleSelectionChange = useCallback((newSelectedId: string | null) => {
-        if (!isControlled) {
-            setInternalSelectedId(newSelectedId);
-        }
-        onSelectionChange?.(newSelectedId);
-    }, [isControlled, onSelectionChange]);
-
-    const handleItemClick = (item: DropdownItemProps) => {
+    // Item click handler
+    const handleItemClick = useCallback((item: DropdownItemProps) => {
         if (!item.id) {
             item.onClick?.(null as unknown as React.MouseEvent<HTMLButtonElement>);
             return;
@@ -68,20 +51,13 @@ export function DropdownItemGroup({
         const isCurrentlySelected = selectedId === item.id;
         
         if (isCurrentlySelected && canClearSelected) {
-            handleSelectionChange(null);
+            handleSelect(null);
         } else if (!isCurrentlySelected) {
-            handleSelectionChange(item.id);
+            handleSelect(item.id);
         }
 
         item.onClick?.(null as unknown as React.MouseEvent<HTMLButtonElement>);
-    };
-
-    // Filter items based on search query
-    const filteredItems = searchable && searchQuery
-        ? items.filter(item => 
-            item.label.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        : items;
+    }, [selectedId, canClearSelected, handleSelect]);
     
     return (
         <div className={`${className}`}>

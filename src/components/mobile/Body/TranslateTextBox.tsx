@@ -9,7 +9,7 @@ import { Icon } from "@iconify/react";
 import { useEffect } from "react";
 import axios from "axios";
 import { Chip } from "@/components/buttons/Chip";
-import { text } from "stream/consumers";
+import { Text } from "@/components/typography/Text";
 import { useNavigatorState } from "@/hooks/useNavigatorState";
 
 export function TranslateTextBox() {
@@ -104,9 +104,9 @@ export function TranslateTextBox() {
         return () => clearTimeout(timer);
     }, [textInput, targetLang.id, setTranslationResult, setIsLoading]);
 
-    const handleCopy = async () => {
-        if (translationResult) {
-            await writeToClipboard(translationResult);
+    const handleCopy = async (text: string) => {
+        if (text) {
+            await writeToClipboard(text);
         }
     };
 
@@ -123,7 +123,9 @@ export function TranslateTextBox() {
                 {/* Source */}
                 <div className="flex flex-col px-3 min-h-35 gap-1">
                     {textInput && <div className="flex flex-row content-between items-center">
-                        <span className="text-base font-medium text-(--topbar-content-label) flex flex-1">{sourceLang.label}</span>
+                        <Text type="label" size="medium" weight="medium">
+                            {sourceLang.label}
+                        </Text>
                         <Chip pattern="brand" size={26} label="Clear" onClick={() => setTextInput("")} />
                     </div>}
                     <div className="flex flex-row text-(--text-box-content-title-enabled)">
@@ -140,7 +142,7 @@ export function TranslateTextBox() {
                                 icon="material-symbols:content-copy-outline"
                                 size={24}
                                 pattern="primary"
-                                onClick={handleCopy}
+                                onClick={() => handleCopy(textInput)}
                             />
                         </div>
                     )}
@@ -156,9 +158,9 @@ export function TranslateTextBox() {
                     <div className="flex flex-col px-3 min-h-35 gap-1">
                         <div className="flex flex-row gap-1 text-(--text-box-content-title-selected) items-center">
                             <Icon icon="material-symbols:sign-language" className="text-[16px]" />
-                            <span className="text-base text-(--text-box-content-title-selected) font-medium">
+                            <Text type="label" size="medium" weight="medium">
                                 {targetLang.label}
-                            </span>
+                            </Text>
                         </div>
                         <div className="flex flex-row text-(--text-box-content-body-state-selected)">
                             <TextArea
@@ -174,7 +176,7 @@ export function TranslateTextBox() {
                                 icon="material-symbols:content-copy-outline"
                                 size={24}
                                 pattern="brand-primary"
-                                onClick={handleCopy}
+                                onClick={() => handleCopy(translationResult)}
                             />
                         </div>
                     </div>

@@ -3,6 +3,7 @@
 import { Icon } from "@iconify/react";
 import { useInteractionState } from "@/hooks/useInteractionState";
 import { useMergedHandlers } from "@/hooks/useMergedHandlers";
+import { Text } from "@/components/typography/Text";
 
 interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label?: string;
@@ -12,9 +13,9 @@ interface ChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     icon?: string;
 }
 
-export function Chip({ 
+export function Chip({
     icon,
-    label, 
+    label,
     pattern = "brand-secondary",
     size = 26,
     state: externalState,
@@ -26,11 +27,11 @@ export function Chip({
     onFocus,
     onBlur,
     className = "",
-    ...props 
+    ...props
 }: ChipProps) {
-    const { currentState, handlers } = useInteractionState({ 
-        disabled, 
-        externalState 
+    const { currentState, handlers } = useInteractionState({
+        disabled,
+        externalState
     });
     const mergedHandlers = useMergedHandlers<HTMLButtonElement>(handlers, {
         onMouseEnter,
@@ -58,7 +59,7 @@ export function Chip({
             disabled: "bg-[var(--chip-brand-secondary-bg-disabled)] text-[var(--chip-brand-secondary-content-label-disabled)]",
         }
     };
-    
+
     const sizeStyles = {
         26: "h-[26px] px-[var(--chip-shared-size-26-spacing-p-x)] py-[var(--chip-shared-size-26-spacing-p-y)] gap-[var(--chip-shared-size-26-spacing-gap)] text-sm",
         36: "h-[36px] px-[var(--chip-shared-size-36-spacing-p-x)] py-[var(--chip-shared-size-36-spacing-p-y)] gap-[var(--chip-shared-size-36-spacing-gap)] text-sm"
@@ -68,7 +69,7 @@ export function Chip({
         26: "text-sm",
         36: "text-xl"
     };
-    
+
     const chipClasses = `
         ${sizeStyles[size]}
         ${patternStyles[pattern][currentState]}
@@ -83,16 +84,18 @@ export function Chip({
         duration-200
         outline-none
     `.trim().replace(/\s+/g, ' ');
-    
+
     return (
-        <button 
+        <button
             {...props}
             disabled={disabled}
             className={chipClasses}
             {...mergedHandlers}
         >
             {icon && <Icon icon={icon} className={`pointer-events-none ${iconSizeStyles[size]} relative z-10`} />}
-            {label && <span className="relative z-10">{label}</span>}
+            {label && <Text type="label" size="small" weight="small" className="relative z-10">
+                {label}
+            </Text>}
         </button>
     );
 }
