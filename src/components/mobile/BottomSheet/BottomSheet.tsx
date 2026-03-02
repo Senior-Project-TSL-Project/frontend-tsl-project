@@ -16,7 +16,7 @@ export function BottomSheet({
     onClose, 
     title = "Select",
     children,
-    height = "90vh"
+    height = "75vh"
 }: BottomSheetProps) {
     const sheetRef = useRef<HTMLDivElement>(null);
 

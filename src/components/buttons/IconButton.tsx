@@ -12,6 +12,7 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
     pattern?: "primary" | "brand-primary" | "brand-inverted";
     size?: 16 | 20 | 24 | 40;
     state?: "default" | "hovered" | "pressed" | "focused" | "disabled";
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export function IconButton({ 

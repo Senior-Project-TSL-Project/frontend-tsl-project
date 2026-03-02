@@ -8,6 +8,9 @@ import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { Icon } from "@iconify/react";
 import { useEffect } from "react";
 import axios from "axios";
+import { Chip } from "@/components/buttons/Chip";
+import { Text } from "@/components/typography/Text";
+import { useNavigatorState } from "@/hooks/useNavigatorState";
 
 export function TranslateTextBox() {
     const {
@@ -41,6 +44,8 @@ export function TranslateTextBox() {
             // TODO: Add toast notification
         }
     });
+
+    const { writeToClipboard, readToClipboard, clipboardText } = useNavigatorState();
 
     // Sync isListening with isMic
     useEffect(() => {
@@ -99,14 +104,16 @@ export function TranslateTextBox() {
         return () => clearTimeout(timer);
     }, [textInput, targetLang.id, setTranslationResult, setIsLoading]);
 
-    const handleCopy = async () => {
-        if (translationResult) {
-            try {
-                await navigator.clipboard.writeText(translationResult);
-                // TODO: Add a toast notification here
-            } catch (error) {
-                console.error('Failed to copy:', error);
-            }
+    const handleCopy = async (text: string) => {
+        if (text) {
+            await writeToClipboard(text);
+        }
+    };
+
+    const handlePaste = async () => {
+        const text = await readToClipboard();
+        if (text) {
+            setTextInput(text);
         }
     };
 
@@ -114,13 +121,14 @@ export function TranslateTextBox() {
         <>
             <div className="min-h-35 py-2 gap-4">
                 {/* Source */}
-                <div className="flex flex-col px-3 min-h-35">
-                    {textInput && <div className="flex flex-row">
-                        <span className="">{sourceLang.label}</span>
-                        {/* TODO: Add chip here */}
-                        <span className="ml-auto text-sm font-medium text-(--chip-brand-content-label) px-2 py-1" onClick={() => setTextInput("")}>clear</span>
+                <div className="flex flex-col px-3 min-h-35 gap-1">
+                    {textInput && <div className="flex flex-row content-between items-center">
+                        <Text type="label" size="medium" weight="medium">
+                            {sourceLang.label}
+                        </Text>
+                        <Chip pattern="brand" size={26} label="Clear" onClick={() => setTextInput("")} />
                     </div>}
-                    <div className="flex flex-row">
+                    <div className="flex flex-row text-(--text-box-content-title-enabled)">
                         <TextArea
                             value={textInput}
                             onChange={setTextInput}
@@ -128,19 +136,31 @@ export function TranslateTextBox() {
                             disabled={isMic || !targetLang.id}
                         />
                     </div>
-                    <div className="flex flex-row mt-6"></div>
+                    {textInput && (
+                        <div className="flex flex-row mt-10 w-full justify-end">
+                            <IconButton
+                                icon="material-symbols:content-copy-outline"
+                                size={24}
+                                pattern="primary"
+                                onClick={() => handleCopy(textInput)}
+                            />
+                        </div>
+                    )}
+                    {!textInput && (
+                        <div className="flex flex-row mt-10 w-full justify-start">
+                            <Chip pattern="brand-secondary" size={36} icon="material-symbols:file-copy-rounded" label={"Paste"} onClick={handlePaste} />
+                        </div>
+                    )}
                 </div>
-
                 {textInput && <>
                     <MobileTranslatorDivider />
-
                     {/* Target */}
-                    <div className="flex flex-col px-3 min-h-35">
-                        <div className="flex flex-row gap-1 text-(--text-box-content-title-selected)">
+                    <div className="flex flex-col px-3 min-h-35 gap-1">
+                        <div className="flex flex-row gap-1 text-(--text-box-content-title-selected) items-center">
                             <Icon icon="material-symbols:sign-language" className="text-[16px]" />
-                            <span className="text-sm">
+                            <Text type="label" size="medium" weight="medium">
                                 {targetLang.label}
-                            </span>
+                            </Text>
                         </div>
                         <div className="flex flex-row text-(--text-box-content-body-state-selected)">
                             <TextArea
@@ -151,17 +171,12 @@ export function TranslateTextBox() {
                                 disabled
                             />
                         </div>
-                        <div className="flex flex-row mt-6">
-                            <IconButton icon="material-symbols:tune-rounded" size={24} pattern="brand-primary" />
-                            <div className="w-full">
-                                {/* TODO: Tag here */}
-
-                            </div>
+                        <div className="flex flex-row mt-10 justify-end">
                             <IconButton
                                 icon="material-symbols:content-copy-outline"
                                 size={24}
                                 pattern="brand-primary"
-                                onClick={handleCopy}
+                                onClick={() => handleCopy(translationResult)}
                             />
                         </div>
                     </div>
