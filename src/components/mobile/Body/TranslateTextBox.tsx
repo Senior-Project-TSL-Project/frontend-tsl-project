@@ -8,7 +8,7 @@ import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { Icon } from "@iconify/react";
 import { useEffect } from "react";
 import axios from "axios";
-import { Chip } from "@/components/buttons/Chip";
+import { Chip } from "@/components/chips/Chip";
 import { Text } from "@/components/typography/Text";
 import { useNavigatorState } from "@/hooks/useNavigatorState";
 
@@ -139,6 +139,7 @@ export function TranslateTextBox() {
                     {textInput && (
                         <div className="flex flex-row mt-10 w-full justify-end">
                             <IconButton
+                                tooltipContent="Copy"
                                 icon="material-symbols:content-copy-outline"
                                 size={24}
                                 pattern="primary"
@@ -173,6 +174,7 @@ export function TranslateTextBox() {
                         </div>
                         <div className="flex flex-row mt-10 justify-end">
                             <IconButton
+                                tooltipContent="Copy"
                                 icon="material-symbols:content-copy-outline"
                                 size={24}
                                 pattern="brand-primary"

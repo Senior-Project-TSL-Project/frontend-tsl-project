@@ -3,6 +3,7 @@
 import { IconButton } from "@/components/buttons/IconButton";
 import { DropdownInput } from "@/components/dropdowns/DropdownInput";
 import { useTranslateStore } from "@/stores/useTranslateStore";
+import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
 export function TranslatorSwap() {
@@ -32,8 +33,6 @@ export function TranslatorSwap() {
                 label: languageTargetOptions.find(option => option.id === selectedLanguageTarget)?.label || "",
             });
         }
-        console.log("Selected Input Language:", selectedLanguageSource);
-        console.log("Selected Output Language:", selectedLanguageTarget);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedLanguageSource, selectedLanguageTarget, languageTargetOptions, setSourceLang, setTargetLang]);
 
@@ -55,7 +54,7 @@ export function TranslatorSwap() {
                 icon="material-symbols:arrow-right-alt-rounded"
                 size={20}
                 pattern="primary"
-                disabled
+                justIcon
             />
             <DropdownInput
                 pattern="secondary"
