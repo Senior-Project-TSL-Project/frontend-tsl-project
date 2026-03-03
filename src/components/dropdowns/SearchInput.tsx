@@ -36,6 +36,7 @@ export function SearchInput({
             {value && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
                     <IconButton
+                        tooltipContent="Close"
                         icon="material-symbols:close-rounded" 
                         pattern="primary" 
                         size={16} 

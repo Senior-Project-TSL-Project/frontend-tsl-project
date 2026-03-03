@@ -11,7 +11,7 @@ export function HeaderBottomSheet({ title, onClose }: HeaderBottomSheetProps) {
     return (
         <div className="flex items-center justify-between px-4 py-3 bg-white rounded-t-3xl">
             <Text type="label" size="large" weight="large" className="text-center">{title}</Text>
-            <IconButton icon="mdi:close" onClick={onClose} size={24} />
+            <IconButton tooltipContent="Close" icon="mdi:close" onClick={onClose} size={24} />
         </div>
     );
 }

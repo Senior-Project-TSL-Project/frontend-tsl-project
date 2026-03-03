@@ -21,7 +21,7 @@ export default function TooltipContainer({ children, x, y, contentRef }: Tooltip
                 padding: 'var(--tooltip-spacing-p-y) var(--tooltip-spacing-p-x)',
                 overflow: 'hidden',
                 boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2), 0px 1px 2px rgba(0, 0, 0, 0.24)',
-                
+                zIndex: 9999,
             }}
         >
             <div ref={contentRef} className="text-[--tooltip-label]">
