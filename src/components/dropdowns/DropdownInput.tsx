@@ -155,7 +155,7 @@ export function DropdownInput({
                             style={{ color: iconColor }}
                         />
                     )}
-                    <Text size="small" weight="medium" className="text-center">
+                    <Text size="medium" weight="medium" className="text-center">
                         {isLoading ? "Loading..." : selectedItem?.label || placeholder}
                     </Text>
                 </div>

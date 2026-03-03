@@ -43,18 +43,18 @@ export function TextArea({
         <>
             {isLoading ? (
                 <div className={`w-full h-5.75 rounded-(--loading-radius) animate-pulse bg-(--loading-bg-first) ${className}`} />
-             ) :
-            <textarea
-                ref={textareaRef}
-                className={`w-full h-5.75 resize-none overflow-hidden focus:outline-none text-[18px] placeholder:text(--text-box-content-body-state-empty) caret-(--text-box-content-body-state-typing)  ${className}`}
-                onInput={(e) => auto_grow(e.target as HTMLTextAreaElement)}
-                onKeyDown={handleKeyDown}
-                placeholder={placeholder}
-                value={value}
-                onChange={(e) => onChange?.(e.target.value)
-               }
-                disabled={disabled}>
-            </textarea>}
+            ) :
+                <textarea
+                    ref={textareaRef}
+                    className={`w-full h-5.75 resize-none overflow-hidden focus:outline-none text-[18px] placeholder:text(--text-box-content-body-state-empty) caret-(--text-box-content-body-state-typing) ${className}`}
+                    onInput={(e) => auto_grow(e.target as HTMLTextAreaElement)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={(e) => onChange?.(e.target.value)
+                    }
+                    disabled={disabled}>
+                </textarea>}
         </>
     );
 }

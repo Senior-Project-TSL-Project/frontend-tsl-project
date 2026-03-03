@@ -32,8 +32,8 @@ export function TranslatorSwap() {
                 label: languageTargetOptions.find(option => option.id === selectedLanguageTarget)?.label || "",
             });
         }
-        console.log("Selected Source Language:", selectedLanguageSource);
-        console.log("Selected Target Language:", selectedLanguageTarget);
+        console.log("Selected Input Language:", selectedLanguageSource);
+        console.log("Selected Output Language:", selectedLanguageTarget);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedLanguageSource, selectedLanguageTarget, languageTargetOptions, setSourceLang, setTargetLang]);
 
@@ -52,7 +52,7 @@ export function TranslatorSwap() {
                 disabled={isMic}
             />
             <IconButton
-                icon="material-symbols:swap-horiz-rounded"
+                icon="material-symbols:arrow-right-alt-rounded"
                 size={20}
                 pattern="primary"
                 disabled

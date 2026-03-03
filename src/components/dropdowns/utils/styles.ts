@@ -14,17 +14,17 @@ export const DROPDOWN_PATTERN_STYLES: Record<DropdownPattern, Record<Interaction
         disabled: "bg-transparent text-[var(--dropdown-input-primary-label)] opacity-50 cursor-not-allowed"
     },
     "secondary": {
-        default: "bg-[var(--dropdown-input-secondary-bg-default)] text-[var(--dropdown-input-secondary-label-default)]",
-        hovered: "bg-[var(--dropdown-input-secondary-bg-state-hovered)] text-[var(--dropdown-input-secondary-label-default)]",
-        pressed: "bg-[var(--dropdown-input-secondary-bg-state-pressed)] text-[var(--dropdown-input-secondary-label-default)]",
-        focused: "bg-[var(--dropdown-input-secondary-bg-state-focused)] text-[var(--dropdown-input-secondary-label-default)]",
-        disabled: "bg-[var(--dropdown-input-secondary-bg-state-disabled)] text-[var(--dropdown-input-secondary-label-disabled)] cursor-not-allowed"
+        default: "bg-[var(--dropdown-input-secondary-bg-default)] text-[var(--dropdown-input-secondary-label-default)] ",
+        hovered: "bg-[var(--dropdown-input-secondary-bg-default)] text-[var(--dropdown-input-secondary-label-default)] relative before:content-[''] before:absolute before:inset-0 before:bg-[var(--dropdown-input-secondary-bg-state-hovered)] before:rounded-[var(--dropdown-input-radius)]",
+        pressed: "bg-[var(--dropdown-input-secondary-bg-default)] text-[var(--dropdown-input-secondary-label-default)] relative before:content-[''] before:absolute before:inset-0 before:bg-[var(--dropdown-input-secondary-bg-state-pressed)] before:rounded-[var(--dropdown-input-radius)]",
+        focused: "bg-[var(--dropdown-input-secondary-bg-default)] text-[var(--dropdown-input-secondary-label-default)] relative before:content-[''] before:absolute before:inset-0 before:bg-[var(--dropdown-input-secondary-bg-state-focused)] before:rounded-[var(--dropdown-input-radius)]",
+        disabled: "bg-[var(--dropdown-input-secondary-bg-default)] text-[var(--dropdown-input-secondary-label-disabled)] cursor-not-allowed"
     },
     "tertiary": {
         default: "bg-[var(--dropdown-input-tertiary-bg-default)] text-[var(--dropdown-input-tertiary-label)]",
-        hovered: "bg-[var(--dropdown-input-tertiary-bg-state-hovered)] text-[var(--dropdown-input-tertiary-label)]",
-        pressed: "bg-[var(--dropdown-input-tertiary-bg-state-pressed)] text-[var(--dropdown-input-tertiary-label)]",
-        focused: "bg-[var(--dropdown-input-tertiary-bg-state-focused)] text-[var(--dropdown-input-tertiary-label)]",
+        hovered: "bg-[var(--dropdown-input-tertiary-bg-default)] text-[var(--dropdown-input-tertiary-label)] relative before:content-[''] before:absolute before:inset-0 before:bg-[var(--dropdown-input-tertiary-bg-state-hovered)] before:rounded-[var(--dropdown-input-radius)]",
+        pressed: "bg-[var(--dropdown-input-tertiary-bg-default)] text-[var(--dropdown-input-tertiary-label)] relative before:content-[''] before:absolute before:inset-0 before:bg-[var(--dropdown-input-tertiary-bg-state-pressed)] before:rounded-[var(--dropdown-input-radius)]",
+        focused: "bg-[var(--dropdown-input-tertiary-bg-default)] text-[var(--dropdown-input-tertiary-label)] relative before:content-[''] before:absolute before:inset-0 before:bg-[var(--dropdown-input-tertiary-bg-state-focused)] before:rounded-[var(--dropdown-input-radius)]",
         disabled: "bg-[var(--dropdown-input-tertiary-bg-default)] text-[var(--dropdown-input-tertiary-label)] opacity-50 cursor-not-allowed"
     }
 };
@@ -89,5 +89,7 @@ export function buildDropdownButtonClasses(
         duration-200
         border-none
         outline-none
+        text-base
+        font-medium
     `.trim().replace(/\s+/g, ' ');
 }
