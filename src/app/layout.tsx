@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { SnackbarContainer } from "@/components/snackbars/SnackbarContainer";
 
 const googleSans = localFont({
   src: "../fonts/GoogleSans.ttf", 
@@ -24,6 +25,7 @@ export default function RootLayout({
         className={`${googleSans.className} antialiased select-none`}
       >
         {children}
+        <SnackbarContainer />
       </body>
     </html>
   );

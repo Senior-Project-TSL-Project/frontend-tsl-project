@@ -11,6 +11,7 @@ import axios from "axios";
 import { Chip } from "@/components/chips/Chip";
 import { Text } from "@/components/typography/Text";
 import { useNavigatorState } from "@/hooks/useNavigatorState";
+import { toast } from "@/stores/useToastStore";
 
 export function TranslateTextBox() {
     const {
@@ -41,7 +42,7 @@ export function TranslateTextBox() {
             setTextInput(text);
         },
         onError: (error) => {
-            // TODO: Add toast notification
+            toast('Speech recognition error occurred', { type: 'error' });
         }
     });
 
@@ -57,7 +58,7 @@ export function TranslateTextBox() {
         if (isMic && !isListening) {
             setTextInput('');
             if (!isSupported) {
-                alert("Speech recognition is not supported in this browser.");
+                toast("Speech recognition is not supported in this browser.", { type: 'error' });
                 setIsMic(false);
                 return;
             } else {
