@@ -11,7 +11,7 @@ interface ResponseData {
 export async function GET(request: Request) {
   const securityCheck = performSecurityChecks(request, {
     rateLimit: {
-      windowMs: 60000, // 1 min
+      windowMs: 60000 * 3, // 3 min
       maxRequests: 20, // 20 req per min
     }
   });

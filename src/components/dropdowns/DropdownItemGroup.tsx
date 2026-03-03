@@ -1,10 +1,10 @@
 "use client";
 
 import { DropdownItem, DropdownItemProps } from "./DropdownItem";
-import { SearchInput } from "./SearchInput";
 import { useCallback } from "react";
 import { Text } from "../typography/Text";
 import { useSelectionState, useSearchFilter } from "./hooks";
+import { SearchInput } from "../search/SearchInput";
 
 interface DropdownItemGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     items: DropdownItemProps[];
