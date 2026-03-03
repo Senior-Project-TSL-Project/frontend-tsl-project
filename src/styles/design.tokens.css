@@ -231,7 +231,7 @@
   --color-content-neutral-primary: #58616e;
   --color-content-neutral-white: #fbfdfd;
   --color-content-neutral-secondary: #768293;
-  --color-content-state-empty: #bec7d4;
+  --color-content-state-empty: #58616E;
   --color-content-state-disabled: #bec7d4;
   --color-content-brand-primary: #00695c;
   --color-content-brand-secondary: #00796b;
@@ -308,7 +308,7 @@
   --text-box-shared-spacing-gap-text-btw-component: 24px;
   --text-box-content-title-enabled: #0e1012;
   --text-box-content-title-selected: #00695c;
-  --text-box-content-body-state-empty: #bec7d4;
+  --text-box-content-body-state-empty: #58616E;
   --text-box-content-body-state-enabled: #0e1012;
   --text-box-content-body-state-typing: #00695c;
   --text-box-content-body-state-selected: #00695c;
@@ -389,7 +389,7 @@
   --input-size-52-spacing-p-y: 14px;
   --input-tertiary-icon: #58616e;
   --input-tertiary-bg-default: #e9ecf0;
-  --input-tertiary-label-empty: #bec7d4;
+  --input-tertiary-label-empty: #58616E;
   --input-tertiary-label-default: #0e1012;
   --backdrop-bg: #0e101299;
   --tooltip-label: #fbfdfd;
