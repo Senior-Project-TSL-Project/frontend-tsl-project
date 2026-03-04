@@ -1,3 +1,5 @@
+"use client";
+
 import { IconButton } from "@/components/buttons/IconButton";
 import { useTranslateStore } from "@/stores/useTranslateStore";
 

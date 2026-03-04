@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import { useClickOutside } from "@/components/dropdowns/hooks";
-import { HeaderBottomSheet } from "../Header/HeaderBottomSheet";
+import { HeaderBottomSheet } from "../screen/Header/HeaderBottomSheet";
 
 interface BottomSheetProps {
     isOpen: boolean;

@@ -2,15 +2,20 @@
 
 import { IconButton } from "@/components/buttons/IconButton";
 import { DropdownInput } from "@/components/dropdowns/DropdownInput";
+import { DropdownPattern } from "@/components/dropdowns/types";
 import { useTranslateStore } from "@/stores/useTranslateStore";
-import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export function TranslatorSwap() {
-    const [selectedLanguageSource, setSelectedLanguageSource] = useState<string | null>(null);
-    const [selectedLanguageTarget, setSelectedLanguageTarget] = useState<string | null>(null);
+interface TranslatorSwapProps {
+    pattern?: DropdownPattern;
+    width?: number | string;
+    align?: "left" | "center" | "right";
+    useMobileMode?: boolean;
+}
+
+export function TranslatorSwap({ pattern = "primary", width = "100%", align = "left", useMobileMode }: TranslatorSwapProps) {
     const [isTargetLoading, setIsTargetLoading] = useState(false);
-    const { setSourceLang, setTargetLang, isMic } = useTranslateStore();
+    const { sourceLang, targetLang, setSourceLang, setTargetLang, isMic } = useTranslateStore();
     const languageSourceOptions = [
         {
             id: "th",
@@ -20,33 +25,37 @@ export function TranslatorSwap() {
 
     const [languageTargetOptions, setLanguageTargetOptions] = useState<{ id: string; label: string; disabled: boolean }[]>([]);
 
-    useEffect(() => {
-        if (selectedLanguageSource) {
+    const handleSourceChange = (id: string | null) => {
+        if (id) {
             setSourceLang({
-                id: selectedLanguageSource,
-                label: languageSourceOptions.find(option => option.id === selectedLanguageSource)?.label || "",
+                id: id,
+                label: languageSourceOptions.find(option => option.id === id)?.label || "",
             });
         }
-        if (selectedLanguageTarget) {
+    };
+
+    const handleTargetChange = (id: string | null) => {
+        if (id) {
             setTargetLang({
-                id: selectedLanguageTarget,
-                label: languageTargetOptions.find(option => option.id === selectedLanguageTarget)?.label || "",
+                id: id,
+                label: languageTargetOptions.find(option => option.id === id)?.label || "",
             });
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedLanguageSource, selectedLanguageTarget, languageTargetOptions, setSourceLang, setTargetLang]);
+    };
+
+    const alignmentClass = align === "center" ? "mx-auto" : align === "right" ? "ml-auto" : "";
 
     return (
-        <div className="flex flex-row px-3 w-full">
+        <div className={`flex flex-row px-3 ${alignmentClass}`} style={{ width }}>
             <DropdownInput
-                pattern="secondary"
+                pattern={pattern}
                 bottomSheetTitle="Translate from"
                 size={48}
-                selectedId={selectedLanguageSource}
-                onSelectionChange={setSelectedLanguageSource}
+                selectedId={sourceLang.id || null}
+                onSelectionChange={handleSourceChange}
                 items={languageSourceOptions}
                 groupLabel="All Languages"
-                useMobileMode
+                useMobileMode={useMobileMode}
                 searchable
                 disabled={isMic}
             />
@@ -57,19 +66,18 @@ export function TranslatorSwap() {
                 justIcon
             />
             <DropdownInput
-                pattern="secondary"
+                pattern={pattern}
                 bottomSheetTitle="Translate to"
                 size={48}
-                selectedId={selectedLanguageTarget}
-                onSelectionChange={setSelectedLanguageTarget}
+                selectedId={targetLang.id || null}
+                onSelectionChange={handleTargetChange}
                 groupLabel="All Languages"
-                useMobileMode
+                useMobileMode={useMobileMode}
                 searchable
                 disabled={isMic || isTargetLoading}
                 endpoint="/models-dropdown"
                 onLoading={setIsTargetLoading}
                 onLoadComplete={(data: any[]) => {
-                    console.log(data)
                     setLanguageTargetOptions(data)
                 }}
                 valueKey="id"

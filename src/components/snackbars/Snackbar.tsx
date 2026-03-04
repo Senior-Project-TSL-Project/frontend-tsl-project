@@ -28,25 +28,6 @@ export function Snackbar({ toast, onClose }: SnackbarProps) {
         };
     }, [toast.duration]);
 
-    const handleClose = () => {
-        setIsVisible(false);
-        setTimeout(onClose, 300); // Wait for animation
-    };
-
-    const getIcon = () => {
-        switch (toast.type) {
-            case 'success':
-                return "mdi:check-circle";
-            case 'error':
-                return "mdi:alert-circle";
-            case 'warning':
-                return "mdi:alert";
-            case 'info':
-            default:
-                return "mdi:information";
-        }
-    };
-
     return (
         <div
             className={`

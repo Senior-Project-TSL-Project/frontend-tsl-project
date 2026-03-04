@@ -1,7 +1,7 @@
 // useDropdownPosition Hook (Single Responsibility Principle)
 // Handles dropdown positioning logic
 
-import { useLayoutEffect, useState, RefObject } from "react";
+import { useLayoutEffect, useState, RefObject, useRef } from "react";
 import { DropdownPosition } from "../types";
 
 interface UseDropdownPositionOptions {
@@ -16,15 +16,15 @@ export function useDropdownPosition({
     dropdownRef
 }: UseDropdownPositionOptions) {
     const [position, setPosition] = useState<DropdownPosition>("bottom");
-    const [isCalculated, setIsCalculated] = useState(false);
+    const isCalculatedRef = useRef(false);
 
     useLayoutEffect(() => {
         if (!isOpen) {
-            setIsCalculated(false);
+            isCalculatedRef.current = false;
             return;
         }
 
-        if (isOpen && containerRef.current && dropdownRef.current && !isCalculated) {
+        if (isOpen && containerRef.current && dropdownRef.current && !isCalculatedRef.current) {
             const containerRect = containerRef.current.getBoundingClientRect();
             const dropdownHeight = dropdownRef.current.offsetHeight;
             const viewportHeight = window.innerHeight;
@@ -39,10 +39,10 @@ export function useDropdownPosition({
 
             requestAnimationFrame(() => {
                 setPosition(newPosition);
-                setIsCalculated(true);
+                isCalculatedRef.current = true;
             });
         }
-    }, [isOpen, isCalculated, containerRef, dropdownRef]);
+    }, [isOpen, containerRef, dropdownRef]);
 
-    return { position, isCalculated };
+    return { position, isCalculatedRef };
 }

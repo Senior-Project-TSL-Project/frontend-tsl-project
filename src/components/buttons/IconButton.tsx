@@ -90,7 +90,6 @@ export function IconButton({
         ${className}
         ${justIcon ? "cursor-default" : disabled ? "cursor-not-allowed" : "cursor-pointer"}
         rounded-[var(--icon-button-shared-border-radius)]
-        inline-flex
         items-center
         justify-center
         transition-all

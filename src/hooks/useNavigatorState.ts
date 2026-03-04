@@ -6,21 +6,6 @@ export function useNavigatorState() {
     const [clipboardText, setClipboardText] = useState<string | null>(null);
     const [isShowPaste, setIsShowPaste] = useState<boolean | null>(null);
 
-    useEffect(() => {
-        setIsClipboardSupported(!!navigator.clipboard && !!navigator.clipboard.writeText);
-        updatePasteStatus();
-
-        const handleClipboardChange = () => {
-            updatePasteStatus();
-        };
-
-        window.addEventListener('focus', handleClipboardChange);
-
-        return () => {
-            window.removeEventListener('focus', handleClipboardChange);
-        }
-    }, []);
-
     const updatePasteStatus = async () => {
         try {
             const text = await navigator.clipboard.readText();
@@ -60,6 +45,21 @@ export function useNavigatorState() {
             return null;
         }
     }
+    
+    useEffect(() => {
+        setIsClipboardSupported(!!navigator.clipboard && !!navigator.clipboard.writeText);
+        updatePasteStatus();
+
+        const handleClipboardChange = () => {
+            updatePasteStatus();
+        };
+
+        window.addEventListener('focus', handleClipboardChange);
+
+        return () => {
+            window.removeEventListener('focus', handleClipboardChange);
+        }
+    }, []);
 
     return { isClipboardSupported, isShowPaste, clipboardText, writeToClipboard, readToClipboard };
 }

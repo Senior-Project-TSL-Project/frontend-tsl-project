@@ -11,7 +11,7 @@ const googleSans = localFont({
 
 export const metadata: Metadata = {
   title: "TSL Translatate",
-  description: "A translation app built with Next.js, Tailwind CSS, and OpenAI's GPT-3.5 Turbo model. It supports text and speech translation between Thai and English.",
+  description: "A translation app built with Next.js, Tailwind CSS, mT5 and Gemini 2.5 Pro model. It supports text and speech translation between Thai and English.",
 };
 
 export default function RootLayout({

@@ -1,18 +1,44 @@
-import DesktopView from '@/components/screens/DesktopView';
-import MobileView from '@/components/screens/MobileView';
-import { headers } from 'next/headers'
+"use client";
 
-export default async function Home() {
-  const headersList = await headers()
-  const userAgent = headersList.get('user-agent')
+import { Body } from "@/components/screen/Body/Body";
+import { TranslateTextBox } from "@/components/screen/Body/TranslateTextBox";
+import { Footer } from "@/components/screen/Footer/Footer";
+import { TranslatorMic } from "@/components/screen/Footer/TranslatorMic";
+import { TranslatorSwap } from "@/components/screen/Footer/TranslatorSwap";
+import { Header } from "@/components/screen/Header/Header";
 
-  const isMobile = /mobile|android|iphone|ipad|ipod/i.test(userAgent || '');
+export default function View() {
+    return (
+        <div className="min-h-screen flex flex-col bg-[linear-gradient(100deg,var(--loading-bg-first),var(--loading-bg-last))]">
+            <Header />
 
-  // if (isMobile) {
-  //   return <MobileView />; 
-  // }
+            <Body>
+                {/* Desktop: แสดงด้านบน */}
+                <div className="hidden md:block">
+                    <TranslatorSwap
+                        pattern="tertiary"
+                        width="480px"
+                        align="center"
+                    />
+                </div>
 
-  // return <DesktopView />;
+                <TranslateTextBox />
 
-  return <MobileView />;
+                {/* Desktop: แสดง Mic ด้านล่าง */}
+                <div className="hidden md:block">
+                    <TranslatorMic />
+                </div>
+            </Body>
+
+            {/* Mobile: Footer */}
+            <Footer className="md:hidden">
+                <TranslatorSwap
+                    pattern="secondary"
+                    align="center"
+                    useMobileMode
+                />
+                <TranslatorMic />
+            </Footer>
+        </div>
+    );
 }

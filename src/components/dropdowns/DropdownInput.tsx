@@ -7,7 +7,6 @@ import { Icon } from "@iconify/react";
 import { useInteractionState } from "@/hooks/useInteractionState";
 import { useMergedHandlers } from "@/hooks/useMergedHandlers";
 import { Text } from "@/components/typography/Text";
-import { BottomSheet } from "@/components/mobile/BottomSheet/BottomSheet";
 import { 
     useDropdownPosition, 
     useDropdownData, 
@@ -25,8 +24,10 @@ import type {
 import { 
     buildDropdownButtonClasses, 
     getDropdownIconColor,
-    DROPDOWN_SIZE_STYLES
+    DROPDOWN_SIZE_STYLES,
+    DROPDOWN_PATTERN_STYLES
 } from "./utils/styles";
+import { BottomSheet } from "../bottomSheet/BottomSheet";
 
 // Consolidated interface using smaller interfaces (Interface Segregation Principle)
 interface DropdownInputProps extends 
@@ -94,7 +95,7 @@ export function DropdownInput({
         defaultSelectedId
     });
 
-    const { position: dropdownPosition, isCalculated: isPositionCalculated } = useDropdownPosition({
+    const { position: dropdownPosition, isCalculatedRef: isPositionCalculated } = useDropdownPosition({
         isOpen,
         containerRef,
         dropdownRef

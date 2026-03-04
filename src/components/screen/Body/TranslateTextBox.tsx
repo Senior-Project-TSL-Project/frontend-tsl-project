@@ -117,72 +117,78 @@ export function TranslateTextBox() {
     };
 
     return (
-        <>
-            <div className="min-h-35 py-2 gap-4">
-                {/* Source */}
-                <div className="flex flex-col px-3 min-h-35 gap-1">
-                    {textInput && <div className="flex flex-row content-between items-center">
-                        <Text type="label" size="medium" weight="medium">
-                            {sourceLang.label}
-                        </Text>
-                        <Chip pattern="brand" size={26} label="Clear" onClick={() => setTextInput("")} />
-                    </div>}
-                    <div className="flex flex-row text-(--text-box-content-title-enabled)">
-                        <TextArea
-                            value={textInput}
-                            onChange={setTextInput}
-                            placeholder={isMic ? finalText + interimText || "Listening..." : targetLang.id ? "Enter text to translate" : "Please select a target language"}
-                            disabled={isMic || !targetLang.id}
+        <div className="flex flex-1 flex-col md:flex-row py-2 gap-4 md:gap-0 overflow-y-auto md:overflow-visible">
+            {/* Source */}
+            <div className="flex md:flex-1 flex-col px-3 gap-1">
+                {textInput && <div className="flex flex-row content-between items-center">
+                    <Text type="label" size="medium" weight="medium">
+                        {sourceLang.label}
+                    </Text>
+                    <Chip pattern="brand" size={26} label="Clear" onClick={() => setTextInput("")} className="block md:hidden" />
+                    <IconButton
+                        tooltipContent="Clear"
+                        icon="material-symbols:close"
+                        size={16}
+                        pattern="primary"
+                        className="hidden md:block"
+                        onClick={() => setTextInput("")}
+                    />
+                </div>}
+                <div className="flex flex-row text-(--text-box-content-title-enabled)">
+                    <TextArea
+                        value={textInput}
+                        onChange={setTextInput}
+                        placeholder={isMic ? finalText + interimText || "Listening..." : targetLang.id ? "Enter text to translate" : "Please select a target language"}
+                        disabled={isMic || !targetLang.id}
+                    />
+                </div>
+                {textInput && (
+                    <div className="flex flex-row mt-10 md:mt-auto w-full justify-end">
+                        <IconButton
+                            tooltipContent="Copy"
+                            icon="material-symbols:content-copy-outline"
+                            size={24}
+                            pattern="primary"
+                            onClick={() => handleCopy(textInput)}
                         />
                     </div>
-                    {textInput && (
-                        <div className="flex flex-row mt-10 w-full justify-end">
-                            <IconButton
-                                tooltipContent="Copy"
-                                icon="material-symbols:content-copy-outline"
-                                size={24}
-                                pattern="primary"
-                                onClick={() => handleCopy(textInput)}
-                            />
-                        </div>
-                    )}
-                    {!textInput && (
-                        <div className="flex flex-row mt-10 w-full justify-start">
-                            {isShowPaste && <Chip pattern="brand-secondary" size={36} icon="material-symbols:file-copy-rounded" label={"Paste"} onClick={handlePaste} />}
-                        </div>
-                    )}
-                </div>
-                {textInput && <>
-                    <MobileTranslatorDivider />
-                    {/* Target */}
-                    <div className="flex flex-col px-3 min-h-35 gap-1">
-                        <div className="flex flex-row gap-1 text-(--text-box-content-title-selected) items-center">
-                            <Icon icon="material-symbols:sign-language" className="text-[16px]" />
-                            <Text type="label" size="medium" weight="medium">
-                                {targetLang.label}
-                            </Text>
-                        </div>
-                        <div className="flex flex-row text-(--text-box-content-body-state-selected)">
-                            <TextArea
-                                value={translationResult}
-                                onChange={() => { }}
-                                isLoading={isLoading}
-                                placeholder=""
-                                disabled
-                            />
-                        </div>
-                        <div className="flex flex-row mt-10 justify-end">
-                            <IconButton
-                                tooltipContent="Copy"
-                                icon="material-symbols:content-copy-outline"
-                                size={24}
-                                pattern="brand-primary"
-                                onClick={() => handleCopy(translationResult)}
-                            />
-                        </div>
+                )}
+                {!textInput && (
+                    <div className="flex flex-row mt-10 w-full justify-start">
+                        {isShowPaste && <Chip pattern="brand-secondary" size={36} icon="material-symbols:file-copy-rounded" label={"Paste"} onClick={handlePaste} />}
                     </div>
-                </>}
+                )}
             </div>
-        </>
+            {textInput && <>
+                <MobileTranslatorDivider />
+                {/* Target */}
+                <div className="flex md:flex-1 flex-col px-3 gap-1">
+                    <div className="flex flex-row gap-1 text-(--text-box-content-title-selected) items-center">
+                        <Icon icon="material-symbols:sign-language" className="text-[16px]" />
+                        <Text type="label" size="medium" weight="medium">
+                            {targetLang.label}
+                        </Text>
+                    </div>
+                    <div className="flex flex-row text-(--text-box-content-body-state-selected)">
+                        <TextArea
+                            value={translationResult}
+                            onChange={() => { }}
+                            isLoading={isLoading}
+                            placeholder=""
+                            disabled
+                        />
+                    </div>
+                    <div className="flex flex-row mt-10 md:mt-auto justify-end">
+                        <IconButton
+                            tooltipContent="Copy"
+                            icon="material-symbols:content-copy-outline"
+                            size={24}
+                            pattern="brand-primary"
+                            onClick={() => handleCopy(translationResult)}
+                        />
+                    </div>
+                </div>
+            </>}
+        </div>
     );
 }
