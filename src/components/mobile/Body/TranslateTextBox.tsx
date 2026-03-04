@@ -88,8 +88,6 @@ export function TranslateTextBox() {
                 });
 
                 if (response.data.gloss) {
-                    // Extract text from <tsl>...</tsl> tag using regex
-                    const thinkMatch = response.data.gloss.match(/<think>([\s\S]*?)<\/think>/);
                     const tslMatch = response.data.gloss.match(/<tsl>([\s\S]*?)<\/tsl>/);
                     const extractedText = tslMatch ? tslMatch[1].trim() : response.data.gloss;
                     setTranslationResult(extractedText, response.data.confidence || 0);
