@@ -12,7 +12,7 @@ export function Header() {
                 <Text size="large" weight="medium" className="text-(--topbar-content-label)">Sign Translate</Text>
             </div>
             <div className="flex items-center">
-                <IconButton icon="line-md:github" pattern="primary" size={24} onClick={() => window.open("https://github.com/Senior-Project-TSL-Project/frontend-tsl-project", "_blank")}/>
+                <IconButton tooltipContent="Github" icon="line-md:github" pattern="primary" size={24} onClick={() => window.open("https://github.com/Senior-Project-TSL-Project/frontend-tsl-project", "_blank")}/>
             </div>
         </header>
     );

@@ -22,7 +22,10 @@ export function TextArea({
 
     const auto_grow = (element: HTMLTextAreaElement) => {
         element.style.height = "23px";
-        element.style.height = (element.scrollHeight) + "px";
+        const isMobile = window.innerWidth < 768;
+        const maxHeight = isMobile ? 105 : 215;
+        const newHeight = Math.min(element.scrollHeight, maxHeight);
+        element.style.height = newHeight + "px";
     }
 
     useEffect(() => {
@@ -43,18 +46,18 @@ export function TextArea({
         <>
             {isLoading ? (
                 <div className={`w-full h-5.75 rounded-(--loading-radius) animate-pulse bg-(--loading-bg-first) ${className}`} />
-             ) :
-            <textarea
-                ref={textareaRef}
-                className={`w-full h-5.75 resize-none overflow-hidden focus:outline-none text-[18px] placeholder:text(--text-box-content-body-state-empty) caret-(--text-box-content-body-state-typing)  ${className}`}
-                onInput={(e) => auto_grow(e.target as HTMLTextAreaElement)}
-                onKeyDown={handleKeyDown}
-                placeholder={placeholder}
-                value={value}
-                onChange={(e) => onChange?.(e.target.value)
-               }
-                disabled={disabled}>
-            </textarea>}
+            ) :
+                <textarea
+                    ref={textareaRef}
+                    className={`w-full h-5.75 resize-none overflow-y-auto focus:outline-none text-[18px] placeholder:text(--text-box-content-body-state-empty) caret-(--text-box-content-body-state-typing) ${className}`}
+                    onInput={(e) => auto_grow(e.target as HTMLTextAreaElement)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={(e) => onChange?.(e.target.value)
+                    }
+                    disabled={disabled}>
+                </textarea>}
         </>
     );
 }

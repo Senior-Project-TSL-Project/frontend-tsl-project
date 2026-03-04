@@ -1,10 +1,10 @@
 "use client";
 
 import { DropdownItem, DropdownItemProps } from "./DropdownItem";
-import { SearchInput } from "./SearchInput";
 import { useCallback } from "react";
 import { Text } from "../typography/Text";
 import { useSelectionState, useSearchFilter } from "./hooks";
+import { SearchInput } from "../search/SearchInput";
 
 interface DropdownItemGroupProps extends React.HTMLAttributes<HTMLDivElement> {
     items: DropdownItemProps[];
@@ -75,7 +75,7 @@ export function DropdownItemGroup({
             <div className="px-3 py-4">
                 {groupLabel && <Text size="small" weight="medium" className="px-4 mb-2 text-gray-600">{groupLabel}</Text>}
                 
-                <div className="space-y-1 rounded-2xl bg-(--dropdown-input-secondary-bg-default)">
+                <div className="space-y-1 px-1 py-0.5 rounded-2xl bg-(--dropdown-input-secondary-bg-default)">
                     {filteredItems.length > 0 ? (
                         filteredItems.map((item, index) => (
                             <DropdownItem

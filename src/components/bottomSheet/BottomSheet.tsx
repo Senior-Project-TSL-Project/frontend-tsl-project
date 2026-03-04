@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import { useClickOutside } from "@/components/dropdowns/hooks";
+import { HeaderBottomSheet } from "../screen/Header/HeaderBottomSheet";
 
 interface BottomSheetProps {
     isOpen: boolean;
@@ -59,15 +60,7 @@ export function BottomSheet({
                 style={{ height }}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-4 py-3 bg-white rounded-t-3xl">
-                    <h2 className="text-lg font-semibold">{title}</h2>
-                    <button
-                        onClick={onClose}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    >
-                        <Icon icon="mdi:close" width={24} height={24} />
-                    </button>
-                </div>
+                <HeaderBottomSheet title={title} onClose={onClose} />
 
                 {/* Content */}
                 <div className="overflow-y-auto" style={{ height: `calc(${height} - 80px)` }}>

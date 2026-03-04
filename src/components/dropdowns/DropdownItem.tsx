@@ -57,7 +57,7 @@ export function DropdownItem({
             hovered: "bg-[var(--dropdown-menu-item-state-hovered)] text-[var(--dropdown-menu-item-shared-content-title)]",
             pressed: "bg-[var(--dropdown-menu-item-state-pressed)] text-[var(--dropdown-menu-item-shared-content-title)]",
             focused: "bg-[var(--dropdown-menu-item-state-focused)] text-[var(--dropdown-menu-item-shared-content-title)]",
-            disabled: "bg-transparent text-[var(--dropdown-menu-item-shared-content-title)]"
+            disabled: "bg-transparent text-[var(--color-content-state-disabled)]"
         }
     }
 
