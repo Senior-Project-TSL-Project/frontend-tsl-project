@@ -5,7 +5,6 @@ import { useState, useMemo } from "react";
 
 interface Filterable {
     label: string;
-    [key: string]: unknown;
 }
 
 export function useSearchFilter<T extends Filterable>(
