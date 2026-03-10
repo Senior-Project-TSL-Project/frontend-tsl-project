@@ -136,7 +136,7 @@ export function DropdownInput({
     const currentSizeStyle = DROPDOWN_SIZE_STYLES[size];
 
     return (
-        <div ref={containerRef} className="relative w-full">
+        <div ref={containerRef} className="relative w-full min-w-0">
             {/* Input Button */}
             <button
                 ref={buttonRef}
@@ -147,7 +147,7 @@ export function DropdownInput({
                 {...mergedHandlers}
                 {...props}
             >
-                <div className={`flex items-center ${currentSizeStyle.gap} flex-1`}>
+                <div className={`flex items-center ${currentSizeStyle.gap} flex-1 min-w-0`}>
                     {selectedItem?.icon && (
                         <Icon
                             icon={selectedItem.icon}
@@ -156,7 +156,7 @@ export function DropdownInput({
                             style={{ color: iconColor }}
                         />
                     )}
-                    <Text size="medium" weight="medium" className="text-center">
+                    <Text size="medium" weight="medium" className="flex-1 min-w-0 text-center overflow-hidden text-ellipsis" style={{ whiteSpace: "nowrap" }}>
                         {isLoading ? "Loading..." : selectedItem?.label || placeholder}
                     </Text>
                 </div>

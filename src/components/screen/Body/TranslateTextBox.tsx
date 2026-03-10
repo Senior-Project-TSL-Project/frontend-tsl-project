@@ -121,7 +121,7 @@ export function TranslateTextBox() {
             {/* Source */}
             <div className="flex md:flex-1 flex-col px-3 gap-1">
                 {textInput && <div className="flex flex-row content-between items-center">
-                    <Text type="label" size="medium" weight="medium">
+                    <Text type="label" size="medium" weight="medium" className="flex-1">
                         {sourceLang.label}
                     </Text>
                     <Chip pattern="brand" size={26} label="Clear" onClick={() => setTextInput("")} className="block md:hidden" />

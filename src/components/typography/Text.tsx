@@ -5,15 +5,15 @@ interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
     type?: "display" | "headline" | "title" | "body" | "label";
 }
 
-export function Text({ children, size = "medium", weight = "small", type = "label", className = "" }: TextProps) {
+export function Text({ children, size = "medium", weight = "small", type = "label", className = "", style, ...rest }: TextProps) {
     return (
-        <span className={`${className} flex-1 block`}
-            style={
-                {
-                    fontSize: `var(--typography-${type}-${size}-size)`,
-                    fontWeight: `var(--typography-${type}-${weight}-weight)`
-                }
-            }
+        <span className={`${className} block`}
+            style={{
+                fontSize: `var(--typography-${type}-${size}-size)`,
+                fontWeight: `var(--typography-${type}-${weight}-weight)`,
+                ...style
+            }}
+            {...rest}
         >
             {children}
         </span>
