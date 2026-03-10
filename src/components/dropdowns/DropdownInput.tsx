@@ -156,7 +156,7 @@ export function DropdownInput({
                             style={{ color: iconColor }}
                         />
                     )}
-                    <Text size="medium" weight="medium" className="flex-1 min-w-0 text-center overflow-hidden text-ellipsis" style={{ whiteSpace: "nowrap" }}>
+                    <Text size="medium" weight="medium" className="flex-1 min-w-0 text-center truncate">
                         {isLoading ? "Loading..." : selectedItem?.label || placeholder}
                     </Text>
                 </div>
