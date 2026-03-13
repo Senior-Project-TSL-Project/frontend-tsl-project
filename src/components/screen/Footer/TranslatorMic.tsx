@@ -4,7 +4,7 @@ import { IconButton } from "@/components/buttons/IconButton";
 import { useTranslateStore } from "@/stores/useTranslateStore";
 
 export function TranslatorMic() {
-    const { isMic, toggleMic } = useTranslateStore();
+    const { isMic, toggleMic, targetLang } = useTranslateStore();
     return (
         <div className="relative flex items-center justify-center">
             {/* Animated circles behind the button when mic is active */}
@@ -17,7 +17,7 @@ export function TranslatorMic() {
             {/* Button */}
             <div className="relative z-10">
                 {!isMic ? (
-                    <IconButton tooltipContent="Start Mic" icon="material-symbols:mic-outline-rounded" size={40} pattern="brand-inverted" onClick={toggleMic} />
+                    <IconButton tooltipContent="Start Mic" icon="material-symbols:mic-outline-rounded" size={40} pattern="brand-inverted" disabled={!targetLang.id} onClick={toggleMic} />
                 ) : (
                     <IconButton tooltipContent="Stop Mic" icon="material-symbols:stop-rounded" size={40} pattern="brand-inverted" onClick={toggleMic} />
                 )}
