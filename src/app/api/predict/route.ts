@@ -58,11 +58,16 @@ export async function POST(request: Request) {
             "x-api-key": process.env.BACKEND_API_TOKEN,
             "Content-Type": "application/json",
           },
+          signal: request.signal,
         }
       );
       const response = NextResponse.json(res.data as ResponseData);
       return addSecurityHeaders(response);
     } catch (error) {
+      if (axios.isCancel(error)) {
+        return new Response('Request Cancelled', { status: 499 }); 
+      }
+
       const response = NextResponse.json(
         { 
           error: 'Failed to fetch', 

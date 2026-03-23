@@ -75,16 +75,18 @@ export function TranslateTextBox() {
             setTranslationResult('', 0);
             return;
         }
+        
+        const controller = new AbortController();
 
         setIsLoading(true);
 
         const timer = setTimeout(async () => {
-            setIsLoading(true);
-
             try {
                 const response = await axios.post('/api/predict', {
                     text: textInput,
                     model: targetLang.id
+                }, {
+                    signal: controller.signal
                 });
 
                 if (response.data.gloss) {
@@ -93,14 +95,21 @@ export function TranslateTextBox() {
                     setTranslationResult(extractedText, response.data.confidence || 0);
                 }
             } catch (error) {
-                console.error('Translation error:', error);
+                if (axios.isCancel(error)) {
+                    return;
+                }
                 setTranslationResult('เกิดข้อผิดพลาดในการแปล', 0);
             } finally {
-                setIsLoading(false);
+                if (!controller.signal.aborted) {
+                    setIsLoading(false);
+                }
             }
         }, 800);
 
-        return () => clearTimeout(timer);
+        return () => {
+            clearTimeout(timer);
+            controller.abort();
+        };
     }, [textInput, targetLang.id, setTranslationResult, setIsLoading]);
 
     const handleCopy = async (text: string) => {
